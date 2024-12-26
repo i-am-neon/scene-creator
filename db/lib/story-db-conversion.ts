@@ -1,5 +1,5 @@
 import { Story } from "@/types/story";
-import { Database } from "@/db/database.types";
+import { Database } from "@/types/database.types";
 
 type SupabaseStory = Database["public"]["Tables"]["stories"]["Row"];
 
@@ -20,3 +20,4 @@ export const toSupabaseStory = (
   world_overview: story.worldOverview,
   story_overview: story.storyOverview,
 });
+

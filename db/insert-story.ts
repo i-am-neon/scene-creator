@@ -1,6 +1,6 @@
-import { supabase } from "@/lib/init-supabase";
+import { supabase } from "@/db/lib/init-supabase";
 import { Story } from "@/types/story";
-import { toSupabaseStory, toAppStory } from "./story-db-conversion";
+import { toSupabaseStory, toAppStory } from "./lib/story-db-conversion";
 
 export default async function insertStory(
   story: Omit<Story, "id" | "createdAt">
@@ -17,3 +17,4 @@ export default async function insertStory(
 
   return toAppStory(data[0]);
 }
+
