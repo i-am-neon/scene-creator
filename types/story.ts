@@ -5,6 +5,7 @@ export const StorySchema = z.object({
   createdAt: z.string(),
   title: z.string(),
   worldIdea: z.string(),
+  imageUrl: z.string(),
   worldOverview: z.object({
     history: z.string(),
   }),
@@ -14,3 +15,4 @@ export const StorySchema = z.object({
 });
 
 export type Story = z.infer<typeof StorySchema>;
+

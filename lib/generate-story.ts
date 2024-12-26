@@ -1,13 +1,23 @@
 import { Story, StorySchema } from "@/types/story";
 import generateStructuredData from "./generate-structured-data";
+import generateImage from "./generate-image";
 
-export default async function generateStory(worldIdea: string): Promise<Story> {
+export default async function generateStory(
+  worldIdea: string
+): Promise<Omit<Story, "id" | "createdAt">> {
   const systemMessage = "Create the story for the given world idea.";
-  return await generateStructuredData<Story>({
-    systemMessage,
-    prompt: worldIdea,
-    schema: StorySchema,
-  });
+  const [story, imageUrl] = await Promise.all([
+    generateStructuredData<Omit<Story, "imageUrl">>({
+      systemMessage,
+      prompt: worldIdea,
+      schema: StorySchema.omit({ imageUrl: true }),
+    }),
+    generateImage({
+      aspectRatio: "1:1",
+      prompt: worldIdea,
+    }),
+  ]);
+  return { ...story, imageUrl, worldIdea };
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
