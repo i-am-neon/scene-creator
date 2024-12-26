@@ -23,6 +23,9 @@ export default async function saveImage({
     }
     const blob = await response.blob();
 
+    // Ensure the correct content type
+    const contentType = blob.type || `image/${fileExtension}`;
+
     // Convert Blob to a Buffer (needed for Supabase upload)
     const arrayBuffer = await blob.arrayBuffer();
     const buffer = new Uint8Array(arrayBuffer);
@@ -32,8 +35,8 @@ export default async function saveImage({
       .from("images")
       .upload(`${folder}/${name}.${fileExtension}`, buffer, {
         cacheControl: "3600",
-        upsert: false,
-        contentType: blob.type, // Optional: Set the correct content type
+        upsert: true,
+        contentType, // Set the correct content type
       });
 
     if (error) {
@@ -56,4 +59,3 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   });
   console.log("Image saved:", res);
 }
-
