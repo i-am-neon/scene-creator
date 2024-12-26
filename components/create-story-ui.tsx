@@ -1,4 +1,5 @@
 "use client";
+import { createStory } from "@/app/actions";
 import {
   Form,
   FormControl,
@@ -9,12 +10,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { LoaderCircle, Shuffle } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
-import { Shuffle } from "lucide-react";
 
 export default function CreateStoryUI() {
   const [showCreateStory, setShowCreateStory] = useState(false);
@@ -31,6 +32,7 @@ export default function CreateStoryUI() {
 }
 
 function CreateStoryForm() {
+  const [isLoading, setIsLoading] = useState(false);
   const formSchema = z.object({
     worldIdea: z.string().min(1),
   });
@@ -62,8 +64,20 @@ function CreateStoryForm() {
     form.setValue("worldIdea", PRESETS[shuffleIndex]);
   }, [shuffleIndex, form, PRESETS]);
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+    const worldIdea = values.worldIdea;
+    setIsLoading(true);
+    try {
+      await createStory(worldIdea);
+    } catch (error) {
+      console.error(error);
+      form.setError("worldIdea", {
+        message: "An error occurred while generating story",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -90,7 +104,13 @@ function CreateStoryForm() {
           <Button variant="outline" type="button" onClick={handleShuffle}>
             <Shuffle />
           </Button>
-          <Button type="submit">Submit</Button>
+          <Button type="submit" disabled={isLoading}>
+            {isLoading ? (
+              <LoaderCircle className="animate-spin" />
+            ) : (
+              "Create Story"
+            )}
+          </Button>
         </div>
       </form>
     </Form>

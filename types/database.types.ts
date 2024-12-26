@@ -13,6 +13,7 @@ export type Database = {
         Row: {
           created_at: string
           id: number
+          image_url: string
           story_overview: Json
           title: string
           world_idea: string
@@ -21,6 +22,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: number
+          image_url: string
           story_overview: Json
           title: string
           world_idea: string
@@ -29,6 +31,7 @@ export type Database = {
         Update: {
           created_at?: string
           id?: number
+          image_url?: string
           story_overview?: Json
           title?: string
           world_idea?: string
