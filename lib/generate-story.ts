@@ -1,6 +1,7 @@
 import { Story, StorySchema } from "@/types/story";
 import generateStructuredData from "./generate-structured-data";
 import generateImage from "./generate-image";
+import saveImage from "@/db/save-image";
 
 export default async function generateStory(
   worldIdea: string
@@ -17,7 +18,16 @@ export default async function generateStory(
       prompt: worldIdea,
     }),
   ]);
-  return { ...story, imageUrl, worldIdea };
+  const publicImageUrl = await saveImage({
+    url: imageUrl,
+    name: story.id.toString(),
+    folder: "stories",
+    fileExtension: "jpg",
+  });
+  if (!publicImageUrl) {
+    throw new Error("Failed to save image.");
+  }
+  return { ...story, imageUrl: publicImageUrl, worldIdea };
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
