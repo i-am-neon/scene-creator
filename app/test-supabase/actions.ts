@@ -1,7 +1,16 @@
 "use server";
-import { supabase } from "@/lib/init-supabase";
+import insertStory from "@/db/insert-story";
 
-export async function testSupabase() {
-  console.log("supabase :>> ", supabase);
+export async function addStory() {
+  await insertStory({
+    title: "The Story",
+    worldIdea: "The World",
+    worldOverview: {
+      history: "The History",
+    },
+    storyOverview: {
+      premise: "The Premise",
+    },
+  });
 }
 

@@ -1,15 +1,15 @@
 "use client";
 import { useCallback } from "react";
-import { testSupabase } from "./actions";
+import { addStory } from "./actions";
 
 export default function TestSupabasePage() {
   const _testSupabase = useCallback(async () => {
-    testSupabase();
+    addStory();
   }, []);
   return (
     <div>
       <h1>Test Supabase Page</h1>
-      <button onClick={_testSupabase}>Test</button>
+      <button onClick={_testSupabase}>Add Story</button>
     </div>
   );
 }
