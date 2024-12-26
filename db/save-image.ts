@@ -1,4 +1,5 @@
 import { supabase } from "./lib/init-supabase";
+import sanitizeFileName from "./lib/sanitize-file-name";
 
 export default async function saveImage({
   url,
@@ -30,10 +31,11 @@ export default async function saveImage({
     const arrayBuffer = await blob.arrayBuffer();
     const buffer = new Uint8Array(arrayBuffer);
 
+    const path = sanitizeFileName(`${folder}/${name}.${fileExtension}`);
     // Upload the file to Supabase
     const { data, error } = await supabase.storage
       .from("images")
-      .upload(`${folder}/${name}.${fileExtension}`, buffer, {
+      .upload(path, buffer, {
         cacheControl: "3600",
         upsert: true,
         contentType, // Set the correct content type
@@ -53,9 +55,10 @@ export default async function saveImage({
 if (import.meta.url === `file://${process.argv[1]}`) {
   const res = await saveImage({
     url: "https://replicate.delivery/xezq/nimaVbpofflZ5U8FxM7VnyFc7XWSeepIOeMebW0HCMycBFqfJA/out-0.jpg",
-    name: "example",
+    name: "example!@@#$%^&*() hi hi!",
     folder: "examples",
     fileExtension: "jpg",
   });
   console.log("Image saved:", res);
 }
+
