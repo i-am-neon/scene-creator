@@ -11,11 +11,7 @@ export default async function saveImage({
   name: string;
   folder: string;
   fileExtension: string;
-}): Promise<{
-  id: string;
-  path: string;
-  fullPath: string;
-} | null> {
+}): Promise<string | null> {
   try {
     // Fetch the image from the URL
     const response = await fetch(url);
@@ -45,7 +41,10 @@ export default async function saveImage({
       throw error;
     }
 
-    return data;
+    const bucketName = "images";
+    const publicImageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${bucketName}/${data.path}`;
+
+    return publicImageUrl;
   } catch (error) {
     console.error("Error uploading image:", error);
     return null;
