@@ -9,6 +9,118 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      characters: {
+        Row: {
+          age: number
+          backstory: string
+          created_at: string
+          gender: string
+          id: number
+          name: string
+          personality: string
+          story_id: number
+        }
+        Insert: {
+          age: number
+          backstory: string
+          created_at?: string
+          gender: string
+          id?: number
+          name: string
+          personality: string
+          story_id: number
+        }
+        Update: {
+          age?: number
+          backstory?: string
+          created_at?: string
+          gender?: string
+          id?: number
+          name?: string
+          personality?: string
+          story_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "characters_story_id_fkey"
+            columns: ["story_id"]
+            isOneToOne: false
+            referencedRelation: "stories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      scene_characters: {
+        Row: {
+          character_id: number
+          id: number
+          scene_id: number
+        }
+        Insert: {
+          character_id: number
+          id?: number
+          scene_id: number
+        }
+        Update: {
+          character_id?: number
+          id?: number
+          scene_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scene characters_character_id_fkey"
+            columns: ["character_id"]
+            isOneToOne: false
+            referencedRelation: "characters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "scene characters_scene_id_fkey"
+            columns: ["scene_id"]
+            isOneToOne: false
+            referencedRelation: "scenes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      scenes: {
+        Row: {
+          created_at: string
+          description: string
+          id: number
+          order: number
+          script: Json
+          story_id: number
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          id?: number
+          order: number
+          script: Json
+          story_id: number
+          title: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: number
+          order?: number
+          script?: Json
+          story_id?: number
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scenes_story_id_fkey"
+            columns: ["story_id"]
+            isOneToOne: false
+            referencedRelation: "stories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       stories: {
         Row: {
           created_at: string

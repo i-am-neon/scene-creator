@@ -1,6 +1,6 @@
 import { Story } from "@/types/story";
 import { supabase } from "../lib/init-supabase";
-import { toAppStory } from "../lib/story-db-conversion";
+import { toAppStory } from "./story-db-conversion";
 
 export default async function readAllStories(): Promise<Story[]> {
   const { data, error } = await supabase.from("stories").select("*");
@@ -12,3 +12,4 @@ export default async function readAllStories(): Promise<Story[]> {
 
   return data.map(toAppStory);
 }
+
