@@ -25,7 +25,7 @@ export default async function generateImage({
   aspectRatio: AspectRatio;
 }): Promise<string> {
   const prediction = await replicate.predictions.create({
-    model: "black-forest-labs/flux-schnell",
+    model: "black-forest-labs/flux-1.1-pro-ultra",
     input: { prompt, aspect_ratio: aspectRatio, output_format: "jpg" },
   });
 
@@ -36,7 +36,7 @@ export default async function generateImage({
     if (check.status === "failed") {
       throw new Error(JSON.stringify(prediction.error, null, 2));
     } else if (check.status === "succeeded") {
-      result = check.output[0];
+      result = check.output;
     } else {
       await sleep(250);
     }
