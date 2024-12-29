@@ -9,6 +9,8 @@ export const CharacterSchema = z.object({
   gender: z.string(),
   personality: z.string(),
   backstory: z.string(),
+  goals: z.array(z.string()),
+  relationships: z.array(z.string()).optional(),
 });
 
 export type Character = z.infer<typeof CharacterSchema>;

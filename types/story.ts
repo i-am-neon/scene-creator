@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { CharacterIdeaSchema } from "./character-idea";
 
 export const StorySchema = z.object({
   id: z.number(),
@@ -11,7 +12,9 @@ export const StorySchema = z.object({
   }),
   storyOverview: z.object({
     premise: z.string(),
-    mainCharacterIdeas: z.array(z.string()).describe("1 - 3 main characters"),
+    mainCharacterIdeas: z
+      .array(CharacterIdeaSchema)
+      .describe("1 - 3 main characters"),
   }),
 });
 
