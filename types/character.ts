@@ -5,7 +5,10 @@ export const CharacterSchema = z.object({
   createdAt: z.string().optional(), // Optional for insert scenarios
   storyId: z.number(),
   portraitUrl: z.string(),
-  name: z.string(),
+  displayName: z
+    .string()
+    .describe("usually the first name, or title followed by first/last name"),
+  fullName: z.string(),
   age: z.number(),
   gender: z.string(),
   personality: z.string(),
