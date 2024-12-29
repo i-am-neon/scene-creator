@@ -7,11 +7,15 @@ export const toAppCharacter = (
   supabaseCharacter: SupabaseCharacter
 ): Character => ({
   id: supabaseCharacter.id,
-  name: supabaseCharacter.name,
+  displayName: supabaseCharacter.display_name,
+  fullName: supabaseCharacter.full_name,
+  portraitUrl: supabaseCharacter.portrait_url,
   age: supabaseCharacter.age,
   gender: supabaseCharacter.gender,
   personality: supabaseCharacter.personality,
   backstory: supabaseCharacter.backstory,
+  goals: supabaseCharacter.goals,
+  relationships: supabaseCharacter.relationships,
   createdAt: supabaseCharacter.created_at,
   storyId: supabaseCharacter.story_id,
 });
@@ -19,10 +23,15 @@ export const toAppCharacter = (
 export const toSupabaseCharacter = (
   character: Omit<Character, "id" | "createdAt">
 ): Omit<SupabaseCharacter, "id" | "created_at"> => ({
-  name: character.name,
+  display_name: character.displayName,
+  full_name: character.fullName,
+  portrait_url: character.portraitUrl,
+  goals: character.goals,
+  relationships: character.relationships,
   age: character.age,
   gender: character.gender,
   personality: character.personality,
   backstory: character.backstory,
   story_id: character.storyId,
 });
+

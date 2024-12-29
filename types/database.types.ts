@@ -14,30 +14,42 @@ export type Database = {
           age: number
           backstory: string
           created_at: string
+          display_name: string
+          full_name: string
           gender: string
+          goals: string[]
           id: number
-          name: string
           personality: string
+          portrait_url: string
+          relationships: string[]
           story_id: number
         }
         Insert: {
           age: number
           backstory: string
           created_at?: string
+          display_name: string
+          full_name: string
           gender: string
+          goals: string[]
           id?: number
-          name: string
           personality: string
+          portrait_url: string
+          relationships: string[]
           story_id: number
         }
         Update: {
           age?: number
           backstory?: string
           created_at?: string
+          display_name?: string
+          full_name?: string
           gender?: string
+          goals?: string[]
           id?: number
-          name?: string
           personality?: string
+          portrait_url?: string
+          relationships?: string[]
           story_id?: number
         }
         Relationships: [

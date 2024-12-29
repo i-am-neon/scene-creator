@@ -5,7 +5,7 @@ import generateImage from "../generate-image";
 import { generateCharacterImagePrompt } from "./gen-character-image-prompt";
 
 export default async function generateCharacterPortraitUrl(
-  character: Character
+  character: Omit<Character, "storyId" | "portraitUrl">
 ): Promise<string> {
   const prompt = await generateCharacterImagePrompt(character);
   const imageUrl = await generateImage({
@@ -26,9 +26,7 @@ export default async function generateCharacterPortraitUrl(
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const testCharacter: Character = {
-    storyId: 1,
-    portraitUrl: "",
+  const testCharacter: Omit<Character, "storyId" | "portraitUrl"> = {
     displayName: "Commander Sarah",
     fullName: "Sarah Alexandra Blackwood",
     age: 35,

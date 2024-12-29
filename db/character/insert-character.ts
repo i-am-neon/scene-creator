@@ -25,13 +25,17 @@ export const insertCharacter = async (
 // Test entry point for Bun
 if (import.meta.url === `file://${process.argv[1]}`) {
   (async () => {
-    const newCharacter = {
-      name: "Erynn",
+    const newCharacter: Omit<Character, "id" | "createdAt"> = {
+      displayName: "Erynn",
+      fullName: "Erynn Nightshade",
+      goals: ["Survive the night", "Find the truth"],
+      portraitUrl: "https://example.com/character.jpg",
       age: 25,
       gender: "female",
       personality: "cunning and resourceful",
       backstory: "A rogue with a mysterious past",
       storyId: 5, // Replace with a valid story ID
+      relationships: ["Rogue's Guild", "Mysterious Stranger"],
     };
 
     const characterId = await insertCharacter(newCharacter);

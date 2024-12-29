@@ -6,7 +6,7 @@ Style is Realistic anime anime.
 The character is slightly turned to the side, completely rendered with clear definition throughout the frame. The art style is highly detailed, with realistic facial features, intricate clothing textures, soft gradients, and subtle lighting effects. The character's expression is serious and intense, with focused eyes and naturally flowing hair. The background is plain white, with no additional details or vignetting effects.`;
 
 export async function generateCharacterImagePrompt(
-  character: Character
+  character: Omit<Character, "storyId" | "portraitUrl">
 ): Promise<string> {
   const promptData = await generateStructuredData({
     schema: CharacterSchema,
@@ -32,9 +32,7 @@ ${promptData.personality}`.trim();
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const testCharacter: Character = {
-    storyId: 1,
-    portraitUrl: "",
+  const testCharacter: Omit<Character, "storyId" | "portraitUrl"> = {
     displayName: "Commander Sarah",
     fullName: "Sarah Alexandra Blackwood",
     age: 35,
@@ -44,6 +42,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     backstory:
       "A decorated military officer with distinctive silver-streaked black hair and a prominent scar across her left cheek. Known for wearing ceremonial armor with golden accents.",
     goals: ["Protect her people", "Find inner peace"],
+    relationships: ["Lieutenant Marcus", "Queen Elara"],
   };
 
   console.log("Generating prompt for test character...");
