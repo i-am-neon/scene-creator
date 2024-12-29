@@ -1,4 +1,4 @@
-import { openai } from "@ai-sdk/openai";
+import { anthropic } from "@ai-sdk/anthropic";
 import { generateObject } from "ai";
 import { ZodSchema } from "zod";
 
@@ -14,7 +14,7 @@ export default async function generateStructuredData<T>({
   temperature?: number;
 }): Promise<T> {
   const { object: result } = await generateObject({
-    model: openai("gpt-4o-mini"),
+    model: anthropic("claude-3-5-haiku-latest"),
     schema,
     system: systemMessage,
     prompt: prompt || "",

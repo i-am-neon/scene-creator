@@ -11,6 +11,7 @@ export const StorySchema = z.object({
   }),
   storyOverview: z.object({
     premise: z.string(),
+    mainCharacterIdeas: z.array(z.string()).describe("1 - 3 main characters"),
   }),
 });
 

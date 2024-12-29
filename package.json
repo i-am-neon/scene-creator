@@ -10,6 +10,7 @@
     "db-types": "supabase gen types typescript --project-id oeivscefnzpuiynswsue > types/database.types.ts"
   },
   "dependencies": {
+    "@ai-sdk/anthropic": "^1.0.6",
     "@ai-sdk/openai": "^1.0.11",
     "@hookform/resolvers": "^3.9.1",
     "@radix-ui/react-label": "^2.1.1",
