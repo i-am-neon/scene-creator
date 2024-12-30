@@ -25,7 +25,9 @@ Key responsibilities:
 - Format narration in 'Narrator: "..."' style for clear distinction from dialogue
 - Weave together plot advancement, character development, and world-building
 - Consider previous scenes to ensure narrative continuity
-- Incorporate described scene elements while allowing for organic story flow`;
+- Incorporate described scene elements while allowing for organic story flow
+- Ignore the audioId field, as it's not relevant to your current task
+- The character name MUST be the character's displayName!`;
 
   const scenePrompt = `
 Story: ${JSON.stringify(story)}

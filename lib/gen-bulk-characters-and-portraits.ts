@@ -6,6 +6,7 @@ import generateCharacterPortraitUrl from "@/lib/generate-character-portrait-url/
 import { Character } from "@/types/character";
 import { CharacterIdea } from "@/types/character-idea";
 import { Story } from "@/types/story";
+import chooseVoice from "./choose-voice/choose-voice";
 
 export default async function generateBulkCharactersAndPortraits({
   characterIdeas,
@@ -21,10 +22,13 @@ export default async function generateBulkCharactersAndPortraits({
     });
     const portraitUrl = await generateCharacterPortraitUrl(character);
 
+    const voiceId = await chooseVoice(character);
+
     return await insertCharacter({
       ...character,
       portraitUrl,
       storyId: story.id,
+      voiceId,
     });
   });
 

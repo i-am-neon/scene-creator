@@ -1,7 +1,13 @@
 import saveAudio from "@/db/save-audio";
 import elevenlabs from "./init-eleven-labs";
 
-export default async function genVoice(voiceId: string, text: string) {
+export default async function genVoice({
+  voiceId,
+  text,
+}: {
+  voiceId: string;
+  text: string;
+}) {
   const audio = await elevenlabs.generate({
     voice: voiceId,
     text,
@@ -14,9 +20,9 @@ export default async function genVoice(voiceId: string, text: string) {
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  genVoice(
-    "rm6bQBXZFIjAZKKIhbhm",
-    "Hello, world! I am a goddamn minitaur!"
-  ).then(console.log);
+  genVoice({
+    voiceId: "rm6bQBXZFIjAZKKIhbhm",
+    text: "Hello, world! I am a goddamn minitaur!",
+  }).then(console.log);
 }
 

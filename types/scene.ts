@@ -19,6 +19,7 @@ export const ScriptSchema = z.array(
   z.object({
     characterName: z.string(),
     text: z.string(),
+    audioId: z.string().optional(),
   })
 );
 export type Script = z.infer<typeof ScriptSchema>;

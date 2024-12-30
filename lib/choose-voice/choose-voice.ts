@@ -9,7 +9,7 @@ const VoiceSelectionSchema = z.object({
 });
 
 export default async function chooseVoice(
-  character: Character
+  character: Omit<Character, "id" | "createdAt" | "storyId" | "portraitUrl">
 ): Promise<string> {
   const voices = await getVoiceOptions({ gender: character.gender });
 

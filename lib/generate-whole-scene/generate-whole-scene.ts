@@ -7,6 +7,7 @@ import generateScene from "./generate-scene";
 import { TEST_ELENA, TEST_MIRA, TEST_STORY, TEST_THERON } from "./test-data";
 import { insertScene } from "@/db/scene/insert-scene";
 import { updateJunctionTable } from "@/db/scene-character/update-junction-table";
+import genScriptAudio from "./gen-script-audio";
 
 interface GenerateSceneParams {
   story: Story;
@@ -39,6 +40,18 @@ export default async function generateWholeScene({
     characters: charactersInScene,
     previousScenes,
     sceneIdea: ideas.sceneIdea,
+  });
+
+  const audioIds = await genScriptAudio({
+    script: generatedScene.script,
+    characterIds: charactersInScene.reduce(
+      (acc, c) => ({ ...acc, [c.displayName]: c.id }),
+      {}
+    ),
+    narratorVoiceId: story.narratorVoiceId,
+  });
+  generatedScene.script.forEach((line, i) => {
+    line.audioId = audioIds[i];
   });
 
   const scene = await insertScene({
