@@ -11,7 +11,7 @@ interface GenerateSceneParams {
   previousScenes: Scene[];
 }
 
-export default async function generateScene({
+export default async function generateWholeScene({
   story,
   existingCharacters,
   previousScenes,
@@ -27,10 +27,12 @@ export default async function generateScene({
   );
   const newCharacters = await Promise.all(newCharacterPromises);
   console.log("newCharacters", JSON.stringify(newCharacters, null, 2));
+
+  // next, we need to generate the scene using the ideas and new characters.
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  generateScene({
+  generateWholeScene({
     story: TEST_STORY,
     existingCharacters: [TEST_ELENA, TEST_THERON, TEST_MIRA],
     previousScenes: [],
