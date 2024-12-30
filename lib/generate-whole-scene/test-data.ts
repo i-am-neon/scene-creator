@@ -8,6 +8,7 @@ export const TEST_STORY: Story = {
   worldIdea:
     "In a world where magic is forbidden, a young mage discovers an ancient artifact.",
   imageUrl: "https://example.com/image.jpg",
+  narratorVoiceId: "1",
   worldOverview: {
     history:
       "After the Cataclysm Wars, magic was outlawed by the Council of Seven. Users of magic are hunted by specialized inquisitors equipped with anti-magic technology.",
@@ -39,6 +40,8 @@ export const TEST_ELENA: Character = {
   storyId: 1,
   portraitUrl: "",
   createdAt: "",
+  voiceId: "",
+  voiceSampleUrl: "",
   id: 1,
   displayName: "Elena",
   fullName: "Elena Ravencroft",
@@ -64,6 +67,8 @@ export const TEST_THERON: Character = {
   storyId: 1,
   portraitUrl: "",
   createdAt: "",
+  voiceId: "",
+  voiceSampleUrl: "",
   id: 2,
   displayName: "Theron",
   fullName: "Theron Blackwood",
@@ -89,6 +94,8 @@ export const TEST_MIRA: Character = {
   storyId: 1,
   portraitUrl: "",
   createdAt: "",
+  voiceId: "",
+  voiceSampleUrl: "",
   id: 3,
   displayName: "Mira",
   fullName: "Mira Ravencroft",
@@ -114,6 +121,8 @@ export const TEST_VAREN: Character = {
   storyId: 1,
   portraitUrl: "",
   createdAt: "",
+  voiceId: "",
+  voiceSampleUrl: "",
   id: 4,
   displayName: "Varen",
   fullName: "Councilor Eldric Varen",

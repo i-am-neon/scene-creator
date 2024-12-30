@@ -1,15 +1,15 @@
 import generateStructuredData from "@/lib/generate-structured-data";
-import { Character } from "@/types/character";
+import { CharacterPreSave } from "@/types/character";
 import { z } from "zod";
-import getVoiceOptions from "./get-voice-options";
 import { TEST_ELENA } from "../generate-whole-scene/test-data";
+import getVoiceOptions from "./get-voice-options";
 
 const VoiceSelectionSchema = z.object({
   voiceId: z.string(),
 });
 
 export default async function chooseVoice(
-  character: Omit<Character, "id" | "createdAt" | "storyId" | "portraitUrl">
+  character: CharacterPreSave
 ): Promise<string> {
   const voices = await getVoiceOptions({ gender: character.gender });
 

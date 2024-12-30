@@ -12,7 +12,10 @@ export async function generateCharacter({
   characterIdea,
   story,
 }: GenerateCharacterParams): Promise<
-  Omit<Character, "id" | "createdAt" | "storyId" | "portraitUrl">
+  Omit<
+    Character,
+    "id" | "createdAt" | "storyId" | "portraitUrl" | "voiceId" | "voiceSampleId"
+  >
 > {
   const systemMessage = `Generate a detailed character profile based on the character idea and world context.
 Include:
@@ -53,6 +56,7 @@ Generate a character profile with:
 if (import.meta.url === `file://${process.argv[1]}`) {
   const story: Story = {
     id: 1,
+    narratorVoiceId: "1",
     createdAt: "2024-01-01T00:00:00Z",
     title: "The Forbidden Mage",
     worldIdea:

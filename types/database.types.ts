@@ -24,6 +24,7 @@ export type Database = {
           relationships: string[]
           story_id: number
           voice_id: string
+          voice_sample_url: string
         }
         Insert: {
           age: number
@@ -39,6 +40,7 @@ export type Database = {
           relationships: string[]
           story_id: number
           voice_id: string
+          voice_sample_url: string
         }
         Update: {
           age?: number
@@ -54,6 +56,7 @@ export type Database = {
           relationships?: string[]
           story_id?: number
           voice_id?: string
+          voice_sample_url?: string
         }
         Relationships: [
           {

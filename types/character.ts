@@ -6,6 +6,7 @@ export const CharacterSchema = z.object({
   storyId: z.number(),
   portraitUrl: z.string(),
   voiceId: z.string(),
+  voiceSampleUrl: z.string(),
   displayName: z
     .string()
     .describe("usually the first name, or title followed by first/last name"),
@@ -19,4 +20,9 @@ export const CharacterSchema = z.object({
 });
 
 export type Character = z.infer<typeof CharacterSchema>;
+
+export type CharacterPreSave = Omit<
+  Character,
+  "id" | "createdAt" | "storyId" | "portraitUrl" | "voiceId" | "voiceSampleUrl"
+>;
 

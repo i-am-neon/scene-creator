@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { readCharacter } from "@/db/character/read-character";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import VoicePlayer from "./components/audio-player";
 
 export default async function CharacterPage({
   params,
@@ -18,7 +19,7 @@ export default async function CharacterPage({
   return (
     <div className="container mx-auto py-6 space-y-6">
       <div className="flex gap-8">
-        <div className="w-64 flex-shrink-0">
+        <div className="w-64 flex-shrink-0 space-y-4">
           <div className="aspect-[2/3] relative">
             <Image
               src={character.portraitUrl}
@@ -28,6 +29,9 @@ export default async function CharacterPage({
               priority
             />
           </div>
+          {character.voiceSampleUrl && (
+            <VoicePlayer url={character.voiceSampleUrl} />
+          )}
         </div>
 
         <div className="flex-1 space-y-6">
@@ -93,3 +97,4 @@ export default async function CharacterPage({
     </div>
   );
 }
+

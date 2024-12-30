@@ -1,11 +1,11 @@
 import saveImage from "@/db/save-image";
-import { Character } from "@/types/character";
+import { CharacterPreSave } from "@/types/character";
 import { v4 as uuidv4 } from "uuid";
 import generateImage from "../generate-image";
 import { generateCharacterImagePrompt } from "./gen-character-image-prompt";
 
 export default async function generateCharacterPortraitUrl(
-  character: Omit<Character, "id" | "createdAt" | "storyId" | "portraitUrl">
+  character: CharacterPreSave
 ): Promise<string> {
   const prompt = await generateCharacterImagePrompt(character);
   const imageUrl = await generateImage({
@@ -26,10 +26,7 @@ export default async function generateCharacterPortraitUrl(
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const testCharacter: Omit<
-    Character,
-    "id" | "createdAt" | "storyId" | "portraitUrl"
-  > = {
+  const testCharacter: CharacterPreSave = {
     displayName: "Commander Sarah",
     fullName: "Sarah Alexandra Blackwood",
     age: 35,

@@ -7,7 +7,7 @@ export default async function saveAudio({
   stream,
 }: {
   stream: Readable;
-}): Promise<string | null> {
+}): Promise<string> {
   try {
     // Convert stream to buffer
     const chunks: Uint8Array[] = [];
@@ -36,7 +36,7 @@ export default async function saveAudio({
     return publicAudioUrl;
   } catch (error) {
     console.error("Error uploading audio:", error);
-    return null;
+    throw error;
   }
 }
 
