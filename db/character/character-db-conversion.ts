@@ -11,7 +11,7 @@ export const toAppCharacter = (
   fullName: supabaseCharacter.full_name,
   portraitUrl: supabaseCharacter.portrait_url,
   age: supabaseCharacter.age,
-  gender: supabaseCharacter.gender,
+  gender: supabaseCharacter.gender as Character["gender"],
   personality: supabaseCharacter.personality,
   backstory: supabaseCharacter.backstory,
   goals: supabaseCharacter.goals,

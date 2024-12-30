@@ -97,29 +97,32 @@ export type Database = {
       }
       scenes: {
         Row: {
+          character_positions: Json
           created_at: string
           description: string
           id: number
           order: number
-          script: Json
+          script: Json[]
           story_id: number
           title: string
         }
         Insert: {
+          character_positions: Json
           created_at?: string
           description: string
           id?: number
           order: number
-          script: Json
+          script: Json[]
           story_id: number
           title: string
         }
         Update: {
+          character_positions?: Json
           created_at?: string
           description?: string
           id?: number
           order?: number
-          script?: Json
+          script?: Json[]
           story_id?: number
           title?: string
         }

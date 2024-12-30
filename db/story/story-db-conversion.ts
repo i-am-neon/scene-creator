@@ -1,4 +1,4 @@
-import { Story } from "@/types/story";
+import { Story, StoryOverview, WorldOverview } from "@/types/story";
 import { Database } from "@/types/database.types";
 
 type SupabaseStory = Database["public"]["Tables"]["stories"]["Row"];
@@ -9,8 +9,8 @@ export const toAppStory = (supabaseStory: SupabaseStory): Story => ({
   imageUrl: supabaseStory.image_url,
   title: supabaseStory.title,
   worldIdea: supabaseStory.world_idea,
-  worldOverview: supabaseStory.world_overview as { history: string },
-  storyOverview: supabaseStory.story_overview as { premise: string },
+  worldOverview: supabaseStory.world_overview as WorldOverview,
+  storyOverview: supabaseStory.story_overview as StoryOverview,
 });
 
 export const toSupabaseStory = (

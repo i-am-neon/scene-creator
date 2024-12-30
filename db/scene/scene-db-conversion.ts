@@ -1,5 +1,5 @@
 import { Database } from "@/types/database.types";
-import { Scene, Script } from "@/types/scene";
+import { CharacterPositionMap, Scene, Script } from "@/types/scene";
 
 type SupabaseScene = Database["public"]["Tables"]["scenes"]["Row"];
 
@@ -11,6 +11,7 @@ export const toAppScene = (supabaseScene: SupabaseScene): Scene => ({
   order: supabaseScene.order,
   script: supabaseScene.script as Script,
   storyId: supabaseScene.story_id,
+  characterPositions: supabaseScene.character_positions as CharacterPositionMap,
 });
 
 export const toSupabaseScene = (
@@ -21,5 +22,6 @@ export const toSupabaseScene = (
   order: scene.order,
   script: scene.script,
   story_id: scene.storyId,
+  character_positions: scene.characterPositions,
 });
 
