@@ -1,8 +1,9 @@
 import { z } from "zod";
+import { CharacterIdeaSchema } from "./character-idea";
 
 export const SceneIdeaSchema = z.object({
   sceneIdea: z.string(),
-  newCharacterIdeas: z.array(z.string()),
+  newCharacterIdeas: z.array(CharacterIdeaSchema),
   existingCharacterIDsIncludedInScene: z.array(z.string()),
 });
 
