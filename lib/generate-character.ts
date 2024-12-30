@@ -86,7 +86,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   };
 
   const character = await generateCharacter({
-    characterIdea: story.storyOverview.mainCharacterIdeas[1],
+    characterIdea: story.storyOverview.mainCharacterIdeas[2],
     story,
   });
 
