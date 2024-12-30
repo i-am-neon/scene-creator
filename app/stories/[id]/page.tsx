@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import CharactersGrid from "./components/characters-grid";
 import CreateSceneButton from "./components/create-scene-button";
+import ScenesGrid from "./components/scenes-grid";
 
 export default async function StoriesPage({
   params,
@@ -35,7 +36,12 @@ export default async function StoriesPage({
         <CreateSceneButton storyId={story.id} />
         <br />
         <br />
+        <h2 className="text-4xl">Characters</h2>
         <CharactersGrid storyId={story.id} />
+        <br />
+        <br />
+        <h2 className="text-4xl">Scenes</h2>
+        <ScenesGrid storyId={story.id} />
       </div>
     </Suspense>
   );
