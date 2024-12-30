@@ -86,10 +86,10 @@ export const TEST_THERON: Character = {
 };
 
 export const TEST_MIRA: Character = {
-  storyId: 3,
+  storyId: 1,
   portraitUrl: "",
   createdAt: "",
-  id: 1,
+  id: 3,
   displayName: "Mira",
   fullName: "Mira Ravencroft",
   age: 29,
@@ -107,6 +107,31 @@ export const TEST_MIRA: Character = {
     "Elena (potential ally in uncovering Council's secrets)",
     "Underground network of rebel mages",
     "Survivors of magical persecution",
+  ],
+};
+
+export const TEST_VAREN: Character = {
+  storyId: 1,
+  portraitUrl: "",
+  createdAt: "",
+  id: 4,
+  displayName: "Varen",
+  fullName: "Councilor Eldric Varen",
+  age: 72,
+  gender: "male",
+  personality:
+    "Calculating, introspective, and strategically compassionate. Varen is a master of political nuance, able to maintain a carefully neutral exterior while secretly working to preserve magical knowledge. He possesses a razor-sharp intellect and an ability to play the long game, often appearing to conform while subtly undermining the most extreme anti-magic policies.",
+  backstory:
+    "During the Cataclysm Wars, Varen witnessed the devastating potential of uncontrolled magic, but also recognized its potential for healing and progress. As a young political advisor, he was instrumental in negotiating the initial magic ban, believing it was the only way to prevent further destruction. However, he secretly worked to preserve critical magical knowledge, understanding that complete eradication would be a greater tragedy. He strategically positioned himself within the Council of Seven, using his political acumen to create hidden sanctuaries and protect select magical artifacts and practitioners from total extinction.",
+  goals: [
+    "Protect the remnants of magical knowledge from complete destruction",
+    "Maintain a delicate balance between public safety and magical preservation",
+    "Identify and subtly support potential magical practitioners who could responsibly use magical arts",
+  ],
+  relationships: [
+    "Confidential allies within the Council",
+    "Hidden network of scholars and former magic users",
+    "Distant mentorship with select young potential mages",
   ],
 };
 

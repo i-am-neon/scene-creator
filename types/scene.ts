@@ -15,10 +15,12 @@ const CharacterPositionMapSchema = z.record(
 );
 export type CharacterPositionMap = z.infer<typeof CharacterPositionMapSchema>;
 
-export const ScriptSchema = z.object({
-  characterName: z.string(),
-  text: z.string(),
-});
+export const ScriptSchema = z.array(
+  z.object({
+    characterName: z.string(),
+    text: z.string(),
+  })
+);
 export type Script = z.infer<typeof ScriptSchema>;
 
 export const SceneSchema = z.object({
