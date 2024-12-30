@@ -5,7 +5,7 @@ import generateImage from "../generate-image";
 import { generateCharacterImagePrompt } from "./gen-character-image-prompt";
 
 export default async function generateCharacterPortraitUrl(
-  character: Omit<Character, "storyId" | "portraitUrl">
+  character: Omit<Character, "id" | "createdAt" | "storyId" | "portraitUrl">
 ): Promise<string> {
   const prompt = await generateCharacterImagePrompt(character);
   const imageUrl = await generateImage({
@@ -26,7 +26,10 @@ export default async function generateCharacterPortraitUrl(
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const testCharacter: Omit<Character, "storyId" | "portraitUrl"> = {
+  const testCharacter: Omit<
+    Character,
+    "id" | "createdAt" | "storyId" | "portraitUrl"
+  > = {
     displayName: "Commander Sarah",
     fullName: "Sarah Alexandra Blackwood",
     age: 35,
@@ -36,6 +39,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     backstory:
       "A decorated military officer with distinctive silver-streaked black hair and a prominent scar across her left cheek. Known for wearing ceremonial armor with golden accents.",
     goals: ["Protect her people", "Find inner peace"],
+    relationships: [],
   };
   generateCharacterPortraitUrl(testCharacter).then(console.log);
 }

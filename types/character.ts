@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 export const CharacterSchema = z.object({
-  id: z.number().optional(), // Optional for insert scenarios
-  createdAt: z.string().optional(), // Optional for insert scenarios
+  id: z.number(),
+  createdAt: z.string(),
   storyId: z.number(),
   portraitUrl: z.string(),
   displayName: z

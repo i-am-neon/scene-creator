@@ -6,7 +6,7 @@ import { TEST_ELENA, TEST_STORY, TEST_THERON, TEST_VAREN } from "./test-data";
 
 interface GenerateSceneParams {
   story: Story;
-  characters: Character[];
+  characters: Omit<Character, "id" | "createdAt" | "storyId" | "portraitUrl">[];
   previousScenes: Scene[];
   sceneIdea: string;
 }

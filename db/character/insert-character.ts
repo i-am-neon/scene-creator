@@ -4,25 +4,26 @@ import { toSupabaseCharacter } from "./character-db-conversion";
 
 export const insertCharacter = async (
   character: Omit<Character, "id" | "createdAt">
-): Promise<number | null> => {
+): Promise<Character> => {
   const supabaseCharacter = toSupabaseCharacter(character);
-
   const { data, error } = await supabase
     .from("characters")
     .insert(supabaseCharacter)
-    .select("id")
+    .select("*")
     .single();
 
   if (error) {
     console.error("Error inserting character:", error);
-    return null;
+    throw error;
   }
 
-  console.log("Character inserted with ID:", data.id);
-  return data.id;
+  return {
+    ...character,
+    id: data.id,
+    createdAt: data.created_at,
+  };
 };
 
-// Test entry point for Bun
 if (import.meta.url === `file://${process.argv[1]}`) {
   (async () => {
     const newCharacter: Omit<Character, "id" | "createdAt"> = {

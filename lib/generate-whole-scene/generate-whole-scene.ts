@@ -1,9 +1,10 @@
+import { Character } from "@/types/character";
 import { Scene } from "@/types/scene";
 import { Story } from "@/types/story";
+import generateBulkCharactersAndPortraits from "../gen-bulk-characters-and-portraits";
 import generateIdeas from "./generate-ideas";
-import { Character } from "@/types/character";
-import { generateCharacter } from "../generate-character";
-import { TEST_STORY, TEST_ELENA, TEST_THERON, TEST_MIRA } from "./test-data";
+import generateScene from "./generate-scene";
+import { TEST_ELENA, TEST_MIRA, TEST_STORY, TEST_THERON } from "./test-data";
 
 interface GenerateSceneParams {
   story: Story;
@@ -21,14 +22,24 @@ export default async function generateWholeScene({
     existingCharacters,
     previousScenes,
   });
-  console.log("ideas :>> ", ideas);
-  const newCharacterPromises = ideas.newCharacterIdeas.map((c) =>
-    generateCharacter({ characterIdea: c, story })
-  );
-  const newCharacters = await Promise.all(newCharacterPromises);
-  console.log("newCharacters", JSON.stringify(newCharacters, null, 2));
+  const newCharacters = await generateBulkCharactersAndPortraits({
+    characterIdeas: ideas.newCharacterIdeas,
+    story,
+  });
 
-  // next, we need to generate the scene using the ideas and new characters.
+  const existingCharactersInScene: Omit<
+    Character,
+    "id" | "createdAt" | "storyId" | "portraitUrl"
+  >[] = existingCharacters.filter((c) =>
+    ideas.existingCharacterIDsIncludedInScene.includes(c.id.toString())
+  );
+
+  return await generateScene({
+    story,
+    characters: [...existingCharactersInScene, ...newCharacters],
+    previousScenes,
+    sceneIdea: ideas.sceneIdea,
+  });
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
