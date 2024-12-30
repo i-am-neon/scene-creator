@@ -25,7 +25,12 @@ export default async function generateStory(
     throw new Error("Failed to save image.");
   }
 
-  return { ...story, imageUrl: publicImageUrl, worldIdea };
+  return {
+    ...story,
+    imageUrl: publicImageUrl,
+    worldIdea,
+    narratorVoiceId: "S9EGwlCtMF7VXtENq79v",
+  };
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {

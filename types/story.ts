@@ -23,8 +23,10 @@ export const StorySchema = z.object({
   title: z.string(),
   worldIdea: z.string(),
   imageUrl: z.string(),
+  narratorVoiceId: z.string(),
   worldOverview: WorldOverviewSchema,
   storyOverview: StoryOverviewSchema,
 });
 
 export type Story = z.infer<typeof StorySchema>;
+

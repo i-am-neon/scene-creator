@@ -23,6 +23,7 @@ export type Database = {
           portrait_url: string
           relationships: string[]
           story_id: number
+          voice_id: string
         }
         Insert: {
           age: number
@@ -37,6 +38,7 @@ export type Database = {
           portrait_url: string
           relationships: string[]
           story_id: number
+          voice_id: string
         }
         Update: {
           age?: number
@@ -51,6 +53,7 @@ export type Database = {
           portrait_url?: string
           relationships?: string[]
           story_id?: number
+          voice_id?: string
         }
         Relationships: [
           {
@@ -141,6 +144,7 @@ export type Database = {
           created_at: string
           id: number
           image_url: string
+          narrator_voice_id: string
           story_overview: Json
           title: string
           world_idea: string
@@ -150,6 +154,7 @@ export type Database = {
           created_at?: string
           id?: number
           image_url: string
+          narrator_voice_id: string
           story_overview: Json
           title: string
           world_idea: string
@@ -159,6 +164,7 @@ export type Database = {
           created_at?: string
           id?: number
           image_url?: string
+          narrator_voice_id?: string
           story_overview?: Json
           title?: string
           world_idea?: string

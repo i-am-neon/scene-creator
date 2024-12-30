@@ -7,6 +7,7 @@ export const toAppStory = (supabaseStory: SupabaseStory): Story => ({
   id: supabaseStory.id,
   createdAt: supabaseStory.created_at,
   imageUrl: supabaseStory.image_url,
+  narratorVoiceId: supabaseStory.narrator_voice_id,
   title: supabaseStory.title,
   worldIdea: supabaseStory.world_idea,
   worldOverview: supabaseStory.world_overview as WorldOverview,
@@ -18,6 +19,7 @@ export const toSupabaseStory = (
 ): Omit<SupabaseStory, "id" | "created_at"> => ({
   title: story.title,
   image_url: story.imageUrl,
+  narrator_voice_id: story.narratorVoiceId,
   world_idea: story.worldIdea,
   world_overview: story.worldOverview,
   story_overview: story.storyOverview,

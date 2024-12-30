@@ -3,7 +3,7 @@ import generateStructuredData from "../generate-structured-data";
 
 export default async function generateStoryData(
   worldIdea: string
-): Promise<Omit<Story, "id" | "createdAt" | "imageUrl">> {
+): Promise<Omit<Story, "id" | "createdAt" | "imageUrl" | "narratorVoiceId">> {
   const systemMessage = "Create the story for the given world idea.";
   return generateStructuredData<Omit<Story, "id" | "createdAt" | "imageUrl">>({
     systemMessage,
