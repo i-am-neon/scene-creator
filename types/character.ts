@@ -10,7 +10,7 @@ export const CharacterSchema = z.object({
     .describe("usually the first name, or title followed by first/last name"),
   fullName: z.string(),
   age: z.number(),
-  gender: z.string(),
+  gender: z.enum(["male", "female", "other"]),
   personality: z.string(),
   backstory: z.string(),
   goals: z.array(z.string()),

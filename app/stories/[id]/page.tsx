@@ -4,6 +4,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { createSceneWithCharacters } from "./actions/create-scene-with-characters";
+import CharactersGrid from "./components/characters-grid";
 
 export default async function StoriesPage({
   params,
@@ -33,6 +34,9 @@ export default async function StoriesPage({
           <dt className="sr-only">Role</dt>
         </dl>
         <Button onClick={createSceneWithCharacters}>Create</Button>
+        <br />
+        <br />
+        <CharactersGrid storyId={story.id} />
       </div>
     </Suspense>
   );

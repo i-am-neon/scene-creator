@@ -7,7 +7,6 @@ import generateCharacterPortraitUrl from "@/lib/generate-character-portrait-url/
 import generateStory from "@/lib/generate-story/generate-story";
 
 export async function createStory(worldIdea: string) {
-  "use server";
   const story = await generateStory(worldIdea);
   const createdStory = await insertStory(story);
   console.log("created story");
