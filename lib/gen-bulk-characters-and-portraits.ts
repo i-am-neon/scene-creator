@@ -28,15 +28,6 @@ export default async function generateBulkCharactersAndPortraits({
 
     const voiceSampleUrl = await generateVoiceSampleUrl({ character, voiceId });
 
-    const blah = {
-      ...character,
-      portraitUrl,
-      storyId: story.id,
-      voiceId,
-      voiceSampleUrl,
-    };
-    console.log("blah", JSON.stringify(blah, null, 2));
-
     return await insertCharacter({
       ...character,
       portraitUrl,
