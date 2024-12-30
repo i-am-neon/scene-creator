@@ -39,9 +39,12 @@ function CreateStoryForm() {
 
   const PRESETS = useMemo(
     () => [
-      "A peaceful forest planet",
-      "A floating island city",
-      "A sunken Atlantis world",
+      "A world where pirates gain supernatural abilities by consuming cursed fruits while sailing across vast oceans in search of the ultimate treasure.",
+      "A dark medieval realm where branded humans struggle against demonic forces while cosmic horror entities manipulate fate.",
+      "A future where human consciousness can be digitally transferred between bodies, turning death into a mere inconvenience for the wealthy.",
+      "A post-apocalyptic wasteland where survivors scavenge for resources while fending off mutated creatures and rival factions.",
+      "An enchanted bathhouse between the mortal and spirit worlds where supernatural beings come to rejuvenate, and humans who enter risk being transformed.",
+      "A world where magic is a finite resource that can be extracted from the environment, leading to a conflict between industrialization and conservation.",
     ],
     []
   );
