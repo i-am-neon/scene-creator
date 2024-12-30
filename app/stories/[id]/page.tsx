@@ -1,10 +1,9 @@
-import { Button } from "@/components/ui/button";
 import readStory from "@/db/story/read-story";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import { createSceneWithCharacters } from "./actions/create-scene-with-characters";
 import CharactersGrid from "./components/characters-grid";
+import CreateSceneButton from "./components/create-scene-button";
 
 export default async function StoriesPage({
   params,
@@ -33,7 +32,7 @@ export default async function StoriesPage({
           <dd className="text-sm text-gray-500">{story.worldIdea}</dd>
           <dt className="sr-only">Role</dt>
         </dl>
-        <Button onClick={createSceneWithCharacters}>Create</Button>
+        <CreateSceneButton storyId={story.id} />
         <br />
         <br />
         <CharactersGrid storyId={story.id} />

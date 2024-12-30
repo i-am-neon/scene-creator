@@ -4,7 +4,7 @@ import { toSupabaseScene } from "./scene-db-conversion";
 
 export const insertScene = async (
   scene: Omit<Scene, "id" | "createdAt">
-): Promise<number | null> => {
+): Promise<Scene> => {
   const supabaseScene = toSupabaseScene(scene);
 
   const { data, error } = await supabase
@@ -14,22 +14,25 @@ export const insertScene = async (
     .single();
 
   if (error) {
-    console.error("Error inserting scene:", error);
-    return null;
+    throw error;
   }
 
   console.log("Scene inserted with ID:", data.id);
-  return data.id;
+  return {
+    ...scene,
+    id: data.id,
+  };
 };
 
 // Test entry point for Bun
 if (import.meta.url === `file://${process.argv[1]}`) {
   (async () => {
-    const newScene = {
+    const newScene: Omit<Scene, "id" | "createdAt"> = {
+      characterPositions: { someone: "far-left" },
       title: "The Great Escape",
       description: "The hero flees the fortress.",
       order: 1,
-      script: { characterIds: [1, 2], text: "hi" } as Script,
+      script: [{ characterName: "something", text: "hi" }] as Script,
       storyId: 5, // Replace with a valid story ID
     };
 

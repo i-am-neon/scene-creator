@@ -24,8 +24,8 @@ export const ScriptSchema = z.array(
 export type Script = z.infer<typeof ScriptSchema>;
 
 export const SceneSchema = z.object({
-  id: z.number().optional(), // Optional for insert scenarios
-  createdAt: z.string().optional(), // Optional for insert scenarios
+  id: z.number(),
+  createdAt: z.string(),
   storyId: z.number(),
   title: z.string(),
   description: z.string(),

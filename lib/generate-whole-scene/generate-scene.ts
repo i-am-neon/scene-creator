@@ -16,7 +16,7 @@ export default async function generateScene({
   characters,
   previousScenes,
   sceneIdea,
-}: GenerateSceneParams): Promise<Omit<Scene, "id" | "createdAt">> {
+}: GenerateSceneParams): Promise<Omit<Scene, "id" | "createdAt" | "order">> {
   const systemMessage = `You are a creative writing assistant specializing in immersive scene generation. Your role is to craft scenes that seamlessly blend dialogue, action, and narrative elements.
 
 Key responsibilities:
