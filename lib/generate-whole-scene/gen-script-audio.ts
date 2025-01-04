@@ -1,6 +1,7 @@
 import { Script } from "@/types/scene";
 import genVoice from "../gen-voice";
 import { readCharacter } from "@/db/character/read-character";
+import { logger } from "../logger";
 
 export default async function genScriptAudio({
   script,
@@ -31,14 +32,25 @@ export default async function genScriptAudio({
     }
   });
 
-  const voiceIds = await Promise.all(promises);
-  // check if any of the voiceIds are null
-  if (voiceIds.includes(null)) {
-    throw new Error(
-      `Voice ID missing in list ${voiceIds} for script ${script}`
-    );
-  }
+  try {
+    const voiceIds = await Promise.all(promises);
 
-  return voiceIds as string[];
+    return voiceIds as string[];
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error
+        ? error.message
+        : "Unknown error occurred while generating audio";
+
+    await logger.error(errorMessage, {
+      scriptLength: script.length,
+      characterIds,
+      narratorVoiceId,
+      error: error instanceof Error ? error.stack : String(error),
+      failedScript: script,
+    });
+
+    throw error;
+  }
 }
 

@@ -8,6 +8,7 @@ import { TEST_ELENA, TEST_MIRA, TEST_STORY, TEST_THERON } from "./test-data";
 import { insertScene } from "@/db/scene/insert-scene";
 import { updateJunctionTable } from "@/db/scene-character/update-junction-table";
 import genScriptAudio from "./gen-script-audio";
+import { logger } from "../logger";
 
 interface GenerateSceneParams {
   story: Story;
@@ -19,12 +20,14 @@ export default async function generateWholeScene({
   story,
   existingCharacters,
   previousScenes,
-}: GenerateSceneParams): Promise<void> {
+}: GenerateSceneParams): Promise<Scene> {
+  await logger.info("    Generating whole scene", { storyId: story.id });
   const ideas = await generateIdeas({
     story,
     existingCharacters,
     previousScenes,
   });
+  await logger.info("        Generated scene ideas", { ideas });
   const newCharacters = await generateBulkCharactersAndPortraits({
     characterIdeas: ideas.newCharacterIdeas,
     story,
@@ -41,6 +44,7 @@ export default async function generateWholeScene({
     previousScenes,
     sceneIdea: ideas.sceneIdea,
   });
+  await logger.info("        Generated scene", { generatedScene });
 
   const audioIds = await genScriptAudio({
     script: generatedScene.script,
@@ -50,6 +54,8 @@ export default async function generateWholeScene({
     ),
     narratorVoiceId: story.narratorVoiceId,
   });
+  await logger.info("        Generated audio for scene", { audioIds });
+
   generatedScene.script.forEach((line, i) => {
     line.audioId = audioIds[i];
   });
@@ -59,10 +65,14 @@ export default async function generateWholeScene({
     order: previousScenes.length + 1,
   });
 
+  await logger.info("        Inserted scene", { sceneId: scene.id });
+
   await updateJunctionTable({
     characterIds: charactersInScene.map((c) => c.id),
     sceneId: scene.id,
   });
+
+  return scene;
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
