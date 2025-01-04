@@ -65,6 +65,7 @@ ${scenesContext}
 - Only include NEW characters not in existingCharacters`;
 
   return generateStructuredData({
+    callName: "generateIdeas",
     schema: SceneIdeaSchema,
     systemMessage,
     prompt,

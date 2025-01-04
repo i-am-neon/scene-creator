@@ -14,6 +14,7 @@ export default async function chooseVoice(
   const voices = await getVoiceOptions({ gender: character.gender });
 
   const result = await generateStructuredData({
+    callName: "chooseVoice",
     schema: VoiceSelectionSchema,
     systemMessage:
       "You are an expert at matching voices to character descriptions.",

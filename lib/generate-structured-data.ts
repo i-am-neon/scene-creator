@@ -9,12 +9,14 @@ const BASE_DELAY = 1000;
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 export default async function generateStructuredData<T>({
+  callName,
   schema,
   systemMessage,
   prompt,
   temperature = 0,
   maxRetries = DEFAULT_MAX_RETRIES,
 }: {
+  callName: string;
   schema: ZodSchema<T>;
   systemMessage: string;
   prompt?: string;
@@ -44,6 +46,7 @@ export default async function generateStructuredData<T>({
       if (attempt < maxRetries - 1) {
         const delay = BASE_DELAY * Math.pow(2, attempt);
         await logger.warn("Structured data generation failed, retrying", {
+          callName,
           error: errorMessage,
           attempt: attempt + 1,
           nextAttemptDelay: delay,
@@ -65,6 +68,7 @@ export default async function generateStructuredData<T>({
       }
 
       await logger.error(errorMessage, {
+        callName,
         error: error instanceof Error ? error.stack : String(error),
         attempts: attempt + 1,
         schemaName: schema.description || "Unknown schema",

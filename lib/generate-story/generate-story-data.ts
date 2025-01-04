@@ -6,6 +6,7 @@ export default async function generateStoryData(
 ): Promise<Omit<Story, "id" | "createdAt" | "imageUrl" | "narratorVoiceId">> {
   const systemMessage = "Create the story for the given world idea.";
   return generateStructuredData<Omit<Story, "id" | "createdAt" | "imageUrl">>({
+    callName: "generateStoryData",
     systemMessage,
     prompt: worldIdea,
     schema: StorySchema.omit({ imageUrl: true }),

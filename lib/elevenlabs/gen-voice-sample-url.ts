@@ -29,6 +29,7 @@ export async function generateVoiceSampleUrl({
   Current Goals: ${character.goals.join(", ")}`;
 
   const { text } = await generateStructuredData({
+    callName: "generateVoiceSample",
     schema: VoiceSampleSchema,
     systemMessage,
     prompt,

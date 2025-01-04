@@ -37,6 +37,7 @@ Ideas: ${JSON.stringify(sceneIdea)}
 Generate a scene that incorporates these elements, using narration to enhance immersion.`;
 
   return generateStructuredData({
+    callName: "generateScene",
     schema: SceneSchema.omit({ id: true, createdAt: true }),
     systemMessage,
     prompt: scenePrompt,

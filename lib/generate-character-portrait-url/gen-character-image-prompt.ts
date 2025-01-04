@@ -9,6 +9,7 @@ export async function generateCharacterImagePrompt(
   character: CharacterPreSave
 ): Promise<string> {
   const promptData = await generateStructuredData({
+    callName: "generateCharacterImagePrompt",
     schema: CharacterSchema,
     systemMessage: `You are a master artist's assistant, specializing in creating vivid, detailed image generation prompts. 
     Extract and elaborate on visual elements from character descriptions, including:

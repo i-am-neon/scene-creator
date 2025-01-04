@@ -46,6 +46,7 @@ Generate a character profile with:
 5. Key relationships (if any)`;
 
   return generateStructuredData({
+    callName: "generateCharacter",
     schema: CharacterSchema.omit({
       id: true,
       createdAt: true,
