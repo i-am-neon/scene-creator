@@ -14,7 +14,12 @@ export async function generateCharacter({
 }: GenerateCharacterParams): Promise<
   Omit<
     Character,
-    "id" | "createdAt" | "storyId" | "portraitUrl" | "voiceId" | "voiceSampleId"
+    | "id"
+    | "createdAt"
+    | "storyId"
+    | "portraitUrl"
+    | "voiceId"
+    | "voiceSampleUrl"
   >
 > {
   const systemMessage = `Generate a detailed character profile based on the character idea and world context.
@@ -46,6 +51,8 @@ Generate a character profile with:
       createdAt: true,
       storyId: true,
       portraitUrl: true,
+      voiceId: true,
+      voiceSampleUrl: true,
     }),
     systemMessage,
     prompt,

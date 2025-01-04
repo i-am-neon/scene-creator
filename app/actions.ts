@@ -6,17 +6,16 @@ import generateStory from "@/lib/generate-story/generate-story";
 import { logger } from "@/lib/logger";
 
 export async function createStory(worldIdea: string) {
+  await logger.info("Creating story", { worldIdea });
   const story = await generateStory(worldIdea);
+  await logger.info("Generated story", { story });
   const createdStory = await insertStory(story);
-  console.log("created story");
+  await logger.info("Inserted story");
 
   await generateBulkCharactersAndPortraits({
     characterIdeas: story.storyOverview.mainCharacterIdeas,
     story: createdStory,
   });
-}
-
-export async function testLog() {
-  await logger.clearLogs();
+  await logger.info("Generated bulk characters and portraits");
 }
 

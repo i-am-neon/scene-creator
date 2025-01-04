@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "db-types": "supabase gen types typescript --project-id oeivscefnzpuiynswsue > types/database.types.ts"
+    "db-types": "supabase gen types typescript --project-id oeivscefnzpuiynswsue > types/database.types.ts",
+    "clear-logs": "bun lib/clear-logs-cli.ts"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^1.0.6",
@@ -48,3 +49,4 @@
     "@eslint/eslintrc": "^3"
   }
 }
+

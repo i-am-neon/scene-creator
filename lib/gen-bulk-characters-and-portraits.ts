@@ -9,6 +9,7 @@ import { Story } from "@/types/story";
 import chooseVoice from "./choose-voice/choose-voice";
 import { generateVoiceSampleUrl } from "./gen-voice-sample-url";
 import { TEST_STORY } from "./generate-whole-scene/test-data";
+import { logger } from "./logger";
 
 export default async function generateBulkCharactersAndPortraits({
   characterIdeas,
@@ -17,16 +18,30 @@ export default async function generateBulkCharactersAndPortraits({
   characterIdeas: CharacterIdea[];
   story: Story;
 }): Promise<Character[]> {
+  await logger.info("Generating characters and portraits");
   const characterPromises = characterIdeas.map(async (characterIdea) => {
     const character = await generateCharacter({
       characterIdea,
       story,
     });
+    await logger.info("    Generated character", { character });
     const portraitUrl = await generateCharacterPortraitUrl(character);
+    await logger.info(`    Generated portrait for "${character.displayName}"`, {
+      portraitUrl,
+    });
 
     const voiceId = await chooseVoice(character);
+    await logger.info(`    Chose voice for "${character.displayName}"`, {
+      voiceId,
+    });
 
     const voiceSampleUrl = await generateVoiceSampleUrl({ character, voiceId });
+    await logger.info(
+      `    Generated voice sample for "${character.displayName}"`,
+      {
+        voiceSampleUrl,
+      }
+    );
 
     return await insertCharacter({
       ...character,
