@@ -1,5 +1,5 @@
 import { Script } from "@/types/scene";
-import genVoice from "../gen-voice";
+import genVoice from "../elevenlabs/gen-voice";
 import { readCharacter } from "@/db/character/read-character";
 import { logger } from "../logger";
 

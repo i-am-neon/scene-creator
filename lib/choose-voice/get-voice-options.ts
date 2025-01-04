@@ -1,7 +1,7 @@
 "use server";
 
 import { Character } from "@/types/character";
-import elevenlabs from "../init-eleven-labs";
+import elevenlabs from "../elevenlabs/init-eleven-labs";
 
 export default async function getVoiceOptions({
   gender,

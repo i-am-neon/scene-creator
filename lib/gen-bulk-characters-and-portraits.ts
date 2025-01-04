@@ -7,7 +7,7 @@ import { Character } from "@/types/character";
 import { CharacterIdea } from "@/types/character-idea";
 import { Story } from "@/types/story";
 import chooseVoice from "./choose-voice/choose-voice";
-import { generateVoiceSampleUrl } from "./gen-voice-sample-url";
+import { generateVoiceSampleUrl } from "./elevenlabs/gen-voice-sample-url";
 import { TEST_STORY } from "./generate-whole-scene/test-data";
 import { logger } from "./logger";
 
@@ -24,24 +24,21 @@ export default async function generateBulkCharactersAndPortraits({
       characterIdea,
       story,
     });
-    await logger.info("    Generated character", { character });
+    await logger.info("Generated character", { character });
     const portraitUrl = await generateCharacterPortraitUrl(character);
-    await logger.info(`    Generated portrait for "${character.displayName}"`, {
+    await logger.info(`Generated portrait for "${character.displayName}"`, {
       portraitUrl,
     });
 
     const voiceId = await chooseVoice(character);
-    await logger.info(`    Chose voice for "${character.displayName}"`, {
+    await logger.info(`Chose voice for "${character.displayName}"`, {
       voiceId,
     });
 
     const voiceSampleUrl = await generateVoiceSampleUrl({ character, voiceId });
-    await logger.info(
-      `    Generated voice sample for "${character.displayName}"`,
-      {
-        voiceSampleUrl,
-      }
-    );
+    await logger.info(`Generated voice sample for "${character.displayName}"`, {
+      voiceSampleUrl,
+    });
 
     return await insertCharacter({
       ...character,

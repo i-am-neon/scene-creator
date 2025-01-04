@@ -15,15 +15,15 @@ export default async function createSceneWithCharacters(
       throw new Error("Story not found");
     }
     const existingCharacters = await readCharacters(storyId);
-    await logger.info("    Existing characters", { existingCharacters });
+    await logger.info("Existing characters", { existingCharacters });
     const previousScenes = await readScenes(storyId);
-    await logger.info("    Previous scenes", { previousScenes });
+    await logger.info("Previous scenes", { previousScenes });
     const scene = await generateWholeScene({
       story,
       existingCharacters,
       previousScenes,
     });
-    await logger.info("    Scene created", { sceneId: scene.id });
+    await logger.info("Scene created", { sceneId: scene.id });
   } catch (error) {
     const errorMessage =
       error instanceof Error

@@ -21,13 +21,13 @@ export default async function generateWholeScene({
   existingCharacters,
   previousScenes,
 }: GenerateSceneParams): Promise<Scene> {
-  await logger.info("    Generating whole scene", { storyId: story.id });
+  await logger.info("Generating whole scene", { storyId: story.id });
   const ideas = await generateIdeas({
     story,
     existingCharacters,
     previousScenes,
   });
-  await logger.info("        Generated scene ideas", { ideas });
+  await logger.info("Generated scene ideas", { ideas });
   const newCharacters = await generateBulkCharactersAndPortraits({
     characterIdeas: ideas.newCharacterIdeas,
     story,
@@ -44,7 +44,7 @@ export default async function generateWholeScene({
     previousScenes,
     sceneIdea: ideas.sceneIdea,
   });
-  await logger.info("        Generated scene", { generatedScene });
+  await logger.info("Generated scene", { generatedScene });
 
   const audioIds = await genScriptAudio({
     script: generatedScene.script,
@@ -54,7 +54,7 @@ export default async function generateWholeScene({
     ),
     narratorVoiceId: story.narratorVoiceId,
   });
-  await logger.info("        Generated audio for scene", { audioIds });
+  await logger.info("Generated audio for scene", { audioIds });
 
   generatedScene.script.forEach((line, i) => {
     line.audioId = audioIds[i];
@@ -65,7 +65,7 @@ export default async function generateWholeScene({
     order: previousScenes.length + 1,
   });
 
-  await logger.info("        Inserted scene", { sceneId: scene.id });
+  await logger.info("    Inserted scene", { sceneId: scene.id });
 
   await updateJunctionTable({
     characterIds: charactersInScene.map((c) => c.id),
