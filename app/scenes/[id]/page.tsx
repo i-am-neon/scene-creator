@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { readScene } from "@/db/scene/read-scene";
 import { notFound } from "next/navigation";
+import ScriptPlayer from "./components/script-player";
 
 export default async function ScenePage({
   params,
@@ -53,17 +54,11 @@ export default async function ScenePage({
             <CardTitle>Script</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {scene.script.map((line, index) => (
-                <div key={index} className="border-b pb-2 last:border-0">
-                  <div className="font-medium">{line.characterName}</div>
-                  <div className="mt-1 text-muted-foreground">{line.text}</div>
-                </div>
-              ))}
-            </div>
+            <ScriptPlayer script={scene.script} />
           </CardContent>
         </Card>
       </div>
     </div>
   );
 }
+
