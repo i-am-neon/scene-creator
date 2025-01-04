@@ -1,8 +1,10 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { readSceneCharacters } from "@/db/scene-character/read-scene-characters";
 import { readScene } from "@/db/scene/read-scene";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import ScenePlayer from "./components/scene-player";
 import ScriptPlayer from "./components/script-player";
 
 export default async function ScenePage({
@@ -10,7 +12,9 @@ export default async function ScenePage({
 }: {
   params: Promise<{ id: number }>;
 }) {
-  const scene = await readScene((await params).id);
+  const sceneId = (await params).id;
+  const scene = await readScene(sceneId);
+  const characters = await readSceneCharacters(sceneId);
   if (!scene) {
     notFound();
   }
@@ -63,6 +67,8 @@ export default async function ScenePage({
           </CardContent>
         </Card>
 
+        <ScenePlayer scene={scene} characters={characters} />
+
         <Card>
           <CardHeader>
             <CardTitle>Script</CardTitle>
@@ -75,3 +81,4 @@ export default async function ScenePage({
     </div>
   );
 }
+

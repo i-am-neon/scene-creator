@@ -23,6 +23,7 @@ export default async function generateScene({
 
 Key responsibilities:
 - Use a third-person omniscient narrator to describe scenes, emotions, and unspoken elements
+  - Unspoken elements example: Instead of having the character's text say, "*whispers to himself* I can't believe this is happening," The narrator would narrate, "<Character> whispers to himself" then the character would say, "I can't believe this is happening."
 - Maintain consistent character voices and behaviors based on their established traits
 - Format narration in 'Narrator: "..."' style for clear distinction from dialogue
 - Weave together plot advancement, character development, and world-building
