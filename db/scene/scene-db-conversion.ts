@@ -12,6 +12,7 @@ export const toAppScene = (supabaseScene: SupabaseScene): Scene => ({
   script: supabaseScene.script as Script,
   storyId: supabaseScene.story_id,
   characterPositions: supabaseScene.character_positions as CharacterPositionMap,
+  backgroundImageUrl: supabaseScene.background_image_url,
 });
 
 export const toSupabaseScene = (
@@ -23,5 +24,6 @@ export const toSupabaseScene = (
   script: scene.script,
   story_id: scene.storyId,
   character_positions: scene.characterPositions,
+  background_image_url: scene.backgroundImageUrl,
 });
 

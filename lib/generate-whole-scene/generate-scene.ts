@@ -16,7 +16,9 @@ export default async function generateScene({
   characters,
   previousScenes,
   sceneIdea,
-}: GenerateSceneParams): Promise<Omit<Scene, "id" | "createdAt" | "order">> {
+}: GenerateSceneParams): Promise<
+  Omit<Scene, "id" | "createdAt" | "order" | "backgroundImageUrl">
+> {
   const systemMessage = `You are a creative writing assistant specializing in immersive scene generation. Your role is to craft scenes that seamlessly blend dialogue, action, and narrative elements.
 
 Key responsibilities:
@@ -38,7 +40,12 @@ Generate a scene that incorporates these elements, using narration to enhance im
 
   return generateStructuredData({
     callName: "generateScene",
-    schema: SceneSchema.omit({ id: true, createdAt: true }),
+    schema: SceneSchema.omit({
+      id: true,
+      createdAt: true,
+      order: true,
+      backgroundImageUrl: true,
+    }),
     systemMessage,
     prompt: scenePrompt,
     temperature: 0.7,

@@ -9,6 +9,7 @@ import { insertScene } from "@/db/scene/insert-scene";
 import { updateJunctionTable } from "@/db/scene-character/update-junction-table";
 import genScriptAudio from "./gen-script-audio";
 import { logger } from "../logger";
+import genSceneImage from "./gen-scene-image";
 
 interface GenerateSceneParams {
   story: Story;
@@ -46,14 +47,17 @@ export default async function generateWholeScene({
   });
   await logger.info("Generated scene", { generatedScene });
 
-  const orderedAudioUrls = await genScriptAudio({
-    script: generatedScene.script,
-    characterIds: charactersInScene.reduce(
-      (acc, c) => ({ ...acc, [c.displayName]: c.id }),
-      {}
-    ),
-    narratorVoiceId: story.narratorVoiceId,
-  });
+  const [orderedAudioUrls, backgroundImageUrl] = await Promise.all([
+    genScriptAudio({
+      script: generatedScene.script,
+      characterIds: charactersInScene.reduce(
+        (acc, c) => ({ ...acc, [c.displayName]: c.id }),
+        {}
+      ),
+      narratorVoiceId: story.narratorVoiceId,
+    }),
+    genSceneImage(generatedScene),
+  ]);
   await logger.info("Generated audio for scene", { orderedAudioUrls });
 
   generatedScene.script.forEach((line, i) => {
@@ -63,6 +67,7 @@ export default async function generateWholeScene({
   const scene = await insertScene({
     ...generatedScene,
     order: previousScenes.length + 1,
+    backgroundImageUrl,
   });
 
   await logger.info("    Inserted scene", { sceneId: scene.id });

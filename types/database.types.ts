@@ -103,6 +103,7 @@ export type Database = {
       }
       scenes: {
         Row: {
+          background_image_url: string
           character_positions: Json
           created_at: string
           description: string
@@ -113,6 +114,7 @@ export type Database = {
           title: string
         }
         Insert: {
+          background_image_url: string
           character_positions: Json
           created_at?: string
           description: string
@@ -123,6 +125,7 @@ export type Database = {
           title: string
         }
         Update: {
+          background_image_url?: string
           character_positions?: Json
           created_at?: string
           description?: string

@@ -33,6 +33,7 @@ export const SceneSchema = z.object({
   order: z.number(),
   characterPositions: CharacterPositionMapSchema,
   script: ScriptSchema,
+  backgroundImageUrl: z.string(),
 });
 
 export type Scene = z.infer<typeof SceneSchema>;
