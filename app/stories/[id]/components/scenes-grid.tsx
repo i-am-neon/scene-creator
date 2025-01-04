@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { readScenes } from "@/db/scene/read-scenes";
 import { Scene } from "@/types/scene";
+import Image from "next/image";
 import Link from "next/link";
 
 async function getData(storyId: number): Promise<Scene[]> {
@@ -18,7 +19,16 @@ export default async function ScenesGrid({ storyId }: { storyId: number }) {
     >
       {scenes.map((scene) => (
         <Link href={`/scenes/${scene.id}`} key={scene.id}>
-          <Card className="h-full hover:shadow-lg transition-shadow">
+          <Card className="h-full hover:shadow-lg transition-shadow overflow-hidden">
+            <div className="relative w-full aspect-video">
+              <Image
+                src={scene.backgroundImageUrl}
+                alt={scene.title}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              />
+            </div>
             <CardContent className="pt-6">
               <div className="flex flex-col">
                 <h3 className="text-lg font-semibold">{scene.title}</h3>
@@ -44,4 +54,3 @@ export default async function ScenesGrid({ storyId }: { storyId: number }) {
     </ul>
   );
 }
-

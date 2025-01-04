@@ -19,7 +19,9 @@ export async function generateCharacterImagePrompt(
     - Skin tone and complexion
     - Clothing and accessories (materials, colors, patterns)
     - Any magical or supernatural elements
-    Transform basic descriptions into rich, visual narratives that capture the character's essence.`,
+    Transform basic descriptions into rich, visual narratives that capture the character's essence.
+    
+    You must not include anything that would be considered NSWF: no nudity, gore, or explicit violence. This means no scars, blood, or mutilation of any kind.`,
     prompt: `Create a detailed physical description of this character, focusing on all visual elements that would be crucial for image generation. Include specific details about their appearance, clothing, and any unique features mentioned in their backstory:
     ${JSON.stringify(character, null, 2)}`,
     temperature: 0.7,
