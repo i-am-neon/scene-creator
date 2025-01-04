@@ -3,6 +3,7 @@
 import insertStory from "@/db/story/insert-story";
 import generateBulkCharactersAndPortraits from "@/lib/gen-bulk-characters-and-portraits";
 import generateStory from "@/lib/generate-story/generate-story";
+import { logger } from "@/lib/logger";
 
 export async function createStory(worldIdea: string) {
   const story = await generateStory(worldIdea);
@@ -13,5 +14,9 @@ export async function createStory(worldIdea: string) {
     characterIdeas: story.storyOverview.mainCharacterIdeas,
     story: createdStory,
   });
+}
+
+export async function testLog() {
+  await logger.clearLogs();
 }
 
