@@ -6,6 +6,9 @@ import generateStory from "@/lib/generate-story/generate-story";
 import { logger } from "@/lib/logger";
 
 export async function createStory(worldIdea: string) {
+  await logger.info("");
+  await logger.info("BEGIN STORY GENERATION");
+  await logger.info("");
   await logger.info("Creating story", { worldIdea });
   const story = await generateStory(worldIdea);
   await logger.info("Generated story", { story });
@@ -17,5 +20,8 @@ export async function createStory(worldIdea: string) {
     story: createdStory,
   });
   await logger.info("Generated bulk characters and portraits");
+  await logger.info("");
+  await logger.info("END STORY GENERATION");
+  await logger.info("");
 }
 

@@ -8,6 +8,9 @@ import { logger } from "@/lib/logger";
 export default async function createSceneWithCharacters(
   storyId: number
 ): Promise<void> {
+  await logger.info("");
+  await logger.info("BEGIN SCENE GENERATION");
+  await logger.info("");
   try {
     await logger.info("Creating scene with characters for story", { storyId });
     const story = await readStory(storyId);
@@ -15,7 +18,9 @@ export default async function createSceneWithCharacters(
       throw new Error("Story not found");
     }
     const existingCharacters = await readCharacters(storyId);
-    await logger.info("Existing characters", { existingCharacters });
+    await logger.info(`Existing characters (${existingCharacters.length})`, {
+      existingCharacters,
+    });
     const previousScenes = await readScenes(storyId);
     await logger.info("Previous scenes", { previousScenes });
     const scene = await generateWholeScene({
@@ -36,5 +41,8 @@ export default async function createSceneWithCharacters(
     });
     throw error;
   }
+  await logger.info("");
+  await logger.info("END SCENE GENERATION");
+  await logger.info("");
 }
 

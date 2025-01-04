@@ -1,5 +1,5 @@
 // Configure your rate limit based on your ElevenLabs tier
-const MAX_CONCURRENT_REQUESTS = 2;
+const MAX_CONCURRENT_REQUESTS = 5;
 
 export class RateLimiter {
   private queue: Array<() => Promise<void>> = [];

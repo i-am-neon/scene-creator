@@ -36,8 +36,12 @@ export default async function getVoiceOptions({
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  getVoiceOptions({
-    gender: "female",
-  }).then(console.log);
+  const voiceOptions = await getVoiceOptions({
+    gender: "other",
+  });
+
+  console.log("voiceOptions.length :>> ", voiceOptions.length);
+
+  console.log("voiceOptions :>> ", voiceOptions);
 }
 
