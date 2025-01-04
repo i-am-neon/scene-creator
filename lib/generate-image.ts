@@ -63,11 +63,17 @@ export default async function generateImage({
       return result;
     } catch (error) {
       lastError = error as Error;
+      const errorDetails = {
+        message: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+        name: error instanceof Error ? error.name : undefined,
+        raw: error, // Include raw error for additional context
+      };
 
       if (attempt < maxRetries - 1) {
         const delay = BASE_DELAY * Math.pow(2, attempt);
         await logger.warn("Image generation failed, retrying", {
-          error,
+          error: errorDetails,
           attempt: attempt + 1,
           nextAttemptDelay: delay,
         });
@@ -76,7 +82,7 @@ export default async function generateImage({
       }
 
       await logger.error("Image generation failed permanently", {
-        error,
+        error: errorDetails,
         attempts: attempt + 1,
       });
       throw error;
