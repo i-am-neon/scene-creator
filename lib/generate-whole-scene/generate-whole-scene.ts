@@ -46,7 +46,7 @@ export default async function generateWholeScene({
   });
   await logger.info("Generated scene", { generatedScene });
 
-  const audioIds = await genScriptAudio({
+  const orderedAudioUrls = await genScriptAudio({
     script: generatedScene.script,
     characterIds: charactersInScene.reduce(
       (acc, c) => ({ ...acc, [c.displayName]: c.id }),
@@ -54,10 +54,10 @@ export default async function generateWholeScene({
     ),
     narratorVoiceId: story.narratorVoiceId,
   });
-  await logger.info("Generated audio for scene", { audioIds });
+  await logger.info("Generated audio for scene", { orderedAudioUrls });
 
   generatedScene.script.forEach((line, i) => {
-    line.audioId = audioIds[i];
+    line.audioUrl = orderedAudioUrls[i];
   });
 
   const scene = await insertScene({

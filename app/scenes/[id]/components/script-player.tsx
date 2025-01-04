@@ -35,8 +35,8 @@ const ScriptPlayer: React.FC<ScriptPlayerProps> = ({ script }) => {
   useEffect(() => {
     const audio = audioRef.current;
 
-    if (currentIndex >= 0 && script[currentIndex].audioId) {
-      audio.src = script[currentIndex].audioId;
+    if (currentIndex >= 0 && script[currentIndex].audioUrl) {
+      audio.src = script[currentIndex].audioUrl;
       if (isPlaying) {
         audio.play().catch((error) => {
           console.error("Error playing audio:", error);
