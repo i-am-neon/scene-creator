@@ -3,6 +3,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  PlayCircle,
+  PauseCircle,
+  RotateCcw,
+  SkipBack,
+  SkipForward,
+} from "lucide-react";
 import { Character } from "@/types/character";
 import { Scene, CharacterPositionMap } from "@/types/scene";
 
@@ -23,6 +30,7 @@ const positionToClassName: Record<keyof CharacterPositionMap, string> = {
 const ScenePlayer: React.FC<ScenePlayerProps> = ({ scene, characters }) => {
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [shouldContinuePlayback, setShouldContinuePlayback] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const currentLine = scene.script[currentLineIndex];
 
@@ -33,21 +41,30 @@ const ScenePlayer: React.FC<ScenePlayerProps> = ({ scene, characters }) => {
       audioRef.current.currentTime = 0;
     }
 
-    // If there's an audio URL for the current line, play it
+    // Setup new audio for current line
     if (currentLine.audioUrl) {
       const audio = new Audio(currentLine.audioUrl);
       audioRef.current = audio;
 
       audio.addEventListener("ended", () => {
-        // Auto-advance to next line when audio finishes
         if (currentLineIndex < scene.script.length - 1) {
           setCurrentLineIndex((prev) => prev + 1);
+          // Maintain playing state for next line
+          if (shouldContinuePlayback) {
+            setIsPlaying(true);
+          }
+        } else {
+          // Reset states at the end of the scene
+          setIsPlaying(false);
+          setShouldContinuePlayback(false);
         }
-        setIsPlaying(false);
       });
 
-      audio.play();
-      setIsPlaying(true);
+      // If we should continue playing, start the new audio
+      if (shouldContinuePlayback) {
+        audio.play();
+        setIsPlaying(true);
+      }
     }
 
     return () => {
@@ -56,23 +73,61 @@ const ScenePlayer: React.FC<ScenePlayerProps> = ({ scene, characters }) => {
         audioRef.current.remove();
       }
     };
-  }, [currentLine.audioUrl, currentLineIndex, scene.script.length]);
+  }, [
+    currentLine.audioUrl,
+    currentLineIndex,
+    scene.script.length,
+    shouldContinuePlayback,
+  ]);
 
-  // Find character info by name
-  const getCharacterByName = (name: string) => {
-    return characters.find((char) => char.displayName === name);
+  const handlePlay = () => {
+    if (audioRef.current) {
+      audioRef.current.play();
+      setIsPlaying(true);
+      setShouldContinuePlayback(true);
+    }
   };
 
-  const handleNext = () => {
-    if (currentLineIndex < scene.script.length - 1) {
-      setCurrentLineIndex((prev) => prev + 1);
+  const handlePause = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+      setShouldContinuePlayback(false);
+    }
+  };
+
+  const handleReset = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      setIsPlaying(false);
+      setShouldContinuePlayback(false);
     }
   };
 
   const handlePrevious = () => {
     if (currentLineIndex > 0) {
       setCurrentLineIndex((prev) => prev - 1);
+      // Maintain playback state when navigating
+      if (shouldContinuePlayback) {
+        setIsPlaying(true);
+      }
     }
+  };
+
+  const handleNext = () => {
+    if (currentLineIndex < scene.script.length - 1) {
+      setCurrentLineIndex((prev) => prev + 1);
+      // Maintain playback state when navigating
+      if (shouldContinuePlayback) {
+        setIsPlaying(true);
+      }
+    }
+  };
+
+  // Find character info by name
+  const getCharacterByName = (name: string) => {
+    return characters.find((char) => char.displayName === name);
   };
 
   return (
@@ -135,22 +190,56 @@ const ScenePlayer: React.FC<ScenePlayerProps> = ({ scene, characters }) => {
         </CardContent>
       </Card>
 
-      {/* Navigation controls */}
-      <div className="flex justify-between mt-4">
+      {/* Playback controls */}
+      <div className="flex justify-center items-center gap-4 mt-6 mb-4">
         <button
           onClick={handlePrevious}
-          disabled={currentLineIndex === 0 || isPlaying}
-          className="px-6 py-3 bg-gray-200 rounded-lg disabled:opacity-50 text-lg"
+          disabled={currentLineIndex === 0}
+          className="p-2 rounded-full hover:bg-gray-100 disabled:opacity-50 transition-colors"
+          aria-label="Previous line"
         >
-          Previous
+          <SkipBack className="w-8 h-8" />
         </button>
+
+        {isPlaying ? (
+          <button
+            onClick={handlePause}
+            className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+            aria-label="Pause"
+          >
+            <PauseCircle className="w-12 h-12" />
+          </button>
+        ) : (
+          <button
+            onClick={handlePlay}
+            className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+            aria-label="Play"
+          >
+            <PlayCircle className="w-12 h-12" />
+          </button>
+        )}
+
+        <button
+          onClick={handleReset}
+          className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+          aria-label="Reset current line"
+        >
+          <RotateCcw className="w-8 h-8" />
+        </button>
+
         <button
           onClick={handleNext}
-          disabled={currentLineIndex === scene.script.length - 1 || isPlaying}
-          className="px-6 py-3 bg-gray-200 rounded-lg disabled:opacity-50 text-lg"
+          disabled={currentLineIndex === scene.script.length - 1}
+          className="p-2 rounded-full hover:bg-gray-100 disabled:opacity-50 transition-colors"
+          aria-label="Next line"
         >
-          Next
+          <SkipForward className="w-8 h-8" />
         </button>
+      </div>
+
+      {/* Progress indicator */}
+      <div className="text-center text-sm text-gray-500">
+        Line {currentLineIndex + 1} of {scene.script.length}
       </div>
     </div>
   );
