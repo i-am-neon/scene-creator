@@ -70,7 +70,7 @@ export default async function generateWholeScene({
     backgroundImageUrl,
   });
 
-  await logger.info("    Inserted scene", { sceneId: scene.id });
+  await logger.info("Inserted scene", { sceneId: scene.id });
 
   await updateJunctionTable({
     characterIds: charactersInScene.map((c) => c.id),
