@@ -36,12 +36,6 @@ export default async function generateImage({
 
   for (let attempt = 0; attempt < maxRetries; attempt++) {
     try {
-      await logger.info("Attempting image generation", {
-        attempt: attempt + 1,
-        maxRetries,
-        prompt,
-      });
-
       const prediction = await replicate.predictions.create({
         model: "black-forest-labs/flux-1.1-pro-ultra",
         input: { prompt, aspect_ratio: aspectRatio, output_format: "jpg" },
@@ -59,7 +53,11 @@ export default async function generateImage({
         }
       }
 
-      await logger.info("Image generation succeeded", { attempt: attempt + 1 });
+      await logger.info("Image generation succeeded", {
+        result,
+        prompt,
+        attempt: attempt + 1,
+      });
       return result;
     } catch (error) {
       lastError = error as Error;
@@ -103,3 +101,4 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   });
   console.log("image", image);
 }
+

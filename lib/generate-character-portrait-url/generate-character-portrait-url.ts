@@ -3,6 +3,7 @@ import { CharacterPreSave } from "@/types/character";
 import { v4 as uuidv4 } from "uuid";
 import generateImage from "../generate-image";
 import { generateCharacterImagePrompt } from "./gen-character-image-prompt";
+import removeImageBackground from "../remove-image-background";
 
 export default async function generateCharacterPortraitUrl(
   character: CharacterPreSave
@@ -13,8 +14,10 @@ export default async function generateCharacterPortraitUrl(
     prompt,
   });
 
+  const removedBackgroundImageUrl = await removeImageBackground({ imageUrl });
+
   const publicImageUrl = await saveImage({
-    url: imageUrl,
+    url: removedBackgroundImageUrl,
     name: uuidv4(),
     folder: "characters",
     fileExtension: "jpg",
