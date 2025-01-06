@@ -35,6 +35,15 @@ export default async function generateStructuredData<T>({
         temperature,
       });
 
+      await logger.info("generateStructuredData success", {
+        callName,
+        attempt: attempt + 1,
+        systemMessage,
+        prompt,
+        temperature,
+        result,
+      });
+
       return result;
     } catch (error) {
       lastError = error as Error;
@@ -49,10 +58,10 @@ export default async function generateStructuredData<T>({
           callName,
           error: errorMessage,
           attempt: attempt + 1,
-          nextAttemptDelay: delay,
           systemMessage,
           prompt,
           temperature,
+          nextAttemptDelay: delay,
           stack: error instanceof Error ? error.stack : undefined,
           isZodError: error instanceof Error && "issues" in error,
           zodIssues:
