@@ -63,7 +63,8 @@ export default async function generateImage({
       lastError = error as Error;
       const errorDetails = {
         message: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined,
+        prompt,
+        // stack: error instanceof Error ? error.stack : undefined,
         name: error instanceof Error ? error.name : undefined,
         raw: error, // Include raw error for additional context
       };
