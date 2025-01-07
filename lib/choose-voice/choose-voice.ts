@@ -3,6 +3,7 @@ import { CharacterPreSave } from "@/types/character";
 import { z } from "zod";
 import { TEST_ELENA } from "../generate-whole-scene/test-data";
 import getVoiceOptions from "./get-voice-options";
+import _ from "lodash";
 
 const VoiceSelectionSchema = z.object({
   voiceId: z.string(),
@@ -12,6 +13,7 @@ export default async function chooseVoice(
   character: CharacterPreSave
 ): Promise<string> {
   const voices = await getVoiceOptions({ gender: character.gender });
+  const shuffledVoices = _.shuffle(voices);
 
   const result = await generateStructuredData({
     callName: "chooseVoice",
@@ -25,7 +27,7 @@ export default async function chooseVoice(
    Personality: ${character.personality}
    
    Available voices:
-   ${voices
+   ${shuffledVoices
      .map(
        (v) =>
          `- ${v.name}: ${v.description || "No description"}
@@ -40,11 +42,9 @@ export default async function chooseVoice(
    Select the most appropriate voice ID based on character traits and voice attributes.`,
     temperature: 1,
   });
-
   return result.voiceId;
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   chooseVoice(TEST_ELENA).then(console.log);
 }
-
