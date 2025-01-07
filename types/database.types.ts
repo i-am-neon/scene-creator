@@ -20,6 +20,7 @@ export type Database = {
           goals: string[]
           id: number
           personality: string
+          physical_description: string
           portrait_url: string
           relationships: string[]
           story_id: number
@@ -36,6 +37,7 @@ export type Database = {
           goals: string[]
           id?: number
           personality: string
+          physical_description: string
           portrait_url: string
           relationships: string[]
           story_id: number
@@ -52,6 +54,7 @@ export type Database = {
           goals?: string[]
           id?: number
           personality?: string
+          physical_description?: string
           portrait_url?: string
           relationships?: string[]
           story_id?: number

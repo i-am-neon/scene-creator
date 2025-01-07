@@ -14,6 +14,11 @@ export const CharacterSchema = z.object({
   age: z.number(),
   gender: z.enum(["male", "female", "other"]),
   personality: z.string(),
+  physicalDescription: z
+    .string()
+    .describe(
+      "An in-depth description of the character's physical appearance. Include the description of their body as well as body art, clothing, accessories, etc. Should not include any scars or mutilation."
+    ),
   backstory: z.string(),
   goals: z.array(z.string()),
   relationships: z.array(z.string()),
