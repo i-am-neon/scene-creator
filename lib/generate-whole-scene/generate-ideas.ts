@@ -22,22 +22,24 @@ export default async function generateIdeas({
   - Advance plot and character development through meaningful interactions
   - Create dramatic tension between new and existing characters
   - Maintain consistency with established world rules 
-  - Scene Idea should be a self-contained narrative unit that contributes to the larger story. It should have a clear beginning, middle, and end. It should be about a paragraph in length and show a clear progression of events. This will serve as a summary, so you must give ideas of what the characters do and say but do not need to write the script.
+  - Scene Idea should be a self-contained narrative unit that contributes to the larger story. It should have a clear beginning, middle, and end. It should be about a paragraph in length and show a clear progression of events.
   
-  # Character Guidelines
-  - For newCharacterIdeas, only include NEW characters not already in existingCharacters
+  # Character Guidelines for New Characters
+  - Only create new characters in newCharacterIdeas if they will play an active role in the scene
+  - IMPORTANT: Every character listed in newCharacterIdeas MUST appear and participate in the scene idea
+  - If you don't plan to use a new character in the scene, do not include them in newCharacterIdeas
   - New characters should serve clear narrative purposes and complement the existing cast
-  - Use existingCharacterIDsIncludedInScene to list which existing characters appear in the scene. Instead of the character's name, use their ID
-  - Only add new characters if they will be in this next scene you are creating. It's ok to have no new characters in the scene.
   
   # Scene Requirements
-  - All characters in the sceneIdea MUST be either from existingCharacters (listed in existingCharacterIDsIncludedInScene) OR be defined first in newCharacterIdeas
-  - Do not introduce any characters in the sceneIdea that haven't been established`;
+  - All characters mentioned in the sceneIdea MUST be either:
+    a) From existingCharacters (listed in existingCharacterIDsIncludedInScene) OR
+    b) Defined first in newCharacterIdeas AND actively participating in the scene
+  - The scene should include meaningful interactions between characters
+  - VERIFY: Before submitting, check that every character in newCharacterIdeas appears in the scene idea`;
 
   const charactersContext = existingCharacters
     .map((c) => JSON.stringify(c))
     .join("\n");
-
   const scenesContext = previousScenes
     .map((s) => `Scene ${s.order}: ${s.title} - ${s.description}`)
     .join("\n");
@@ -45,25 +47,19 @@ export default async function generateIdeas({
   const prompt = `# Story Context
 ## World
 ${story.worldIdea}
-
 ## Basic Information
 Title: ${story.title}
 History: ${story.worldOverview.history}
 Premise: ${story.storyOverview.premise}
-
 ## Characters
 ${charactersContext}
-
 ## Previous Scenes
 ${scenesContext}
 
 # Generation Requirements
-1. A scene idea that advances the plot and builds on previous events
-2. New characters relevant to this scene (that complement existing characters)
-
-# Requirements
-- Character ideas MUST include any characters mentioned in History or Premise if existingCharacters is empty
-- Only include NEW characters not in existingCharacters`;
+1. Create a scene idea that advances the plot and builds on previous events
+2. Only add new characters if they will actively participate in the scene
+3. Double-check: Have you included all new characters from newCharacterIdeas in the scene?`;
 
   return generateStructuredData({
     callName: "generateIdeas",
@@ -83,4 +79,3 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     .then(console.log)
     .catch(console.error);
 }
-
