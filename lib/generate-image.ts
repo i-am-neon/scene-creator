@@ -49,6 +49,7 @@ export default async function generateImage({
           prompt: cleanedPrompt,
           aspect_ratio: aspectRatio,
           output_format: "jpg",
+          safety_tolerance: 6,
         },
       });
 
