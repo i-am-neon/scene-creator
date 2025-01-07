@@ -28,15 +28,17 @@ export default async function chooseVoice(
    ${voices
      .map(
        (v) =>
-         `- ${v.name}: ${Object.entries(v.labels || {})
-           .filter(([key]) => key !== "use_case")
-           .map(([key, value]) => `${key}: ${value}`)
-           .join(", ")} (ID: ${v.voice_id})`
+         `- ${v.name}: ${v.description || "No description"}
+     Labels: ${Object.entries(v.labels || {})
+       .filter(([key]) => key !== "use_case")
+       .map(([key, value]) => `${key}: ${value}`)
+       .join(", ")} 
+     ID: ${v.id}`
      )
      .join("\n")}
    
    Select the most appropriate voice ID based on character traits and voice attributes.`,
-    temperature: 0.2,
+    temperature: 1,
   });
 
   return result.voiceId;

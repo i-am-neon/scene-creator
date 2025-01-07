@@ -32,7 +32,12 @@ export default async function getVoiceOptions({
     // return labels?.gender === gender && labels?.age === age;
   });
 
-  return filteredVoices;
+  return filteredVoices.map((voice) => ({
+    id: voice.voice_id,
+    name: voice.name,
+    labels: voice.labels,
+    description: voice.description,
+  }));
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
