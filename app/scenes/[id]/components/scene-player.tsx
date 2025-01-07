@@ -19,12 +19,12 @@ interface ScenePlayerProps {
 }
 
 const positionToClassName: Record<keyof CharacterPositionMap, string> = {
-  "far-left": "left-4",
-  "mid-left": "left-1/4",
-  left: "left-1/3",
-  right: "right-1/3",
-  "mid-right": "right-1/4",
-  "far-right": "right-4",
+  "far-left": "left-0",
+  "mid-left": "left-[16.66%]",
+  left: "left-[33.33%]",
+  right: "right-[33.33%]",
+  "mid-right": "right-[16.66%]",
+  "far-right": "right-0",
 };
 
 const ScenePlayer: React.FC<ScenePlayerProps> = ({ scene, characters }) => {
@@ -35,13 +35,11 @@ const ScenePlayer: React.FC<ScenePlayerProps> = ({ scene, characters }) => {
   const currentLine = scene.script[currentLineIndex];
 
   useEffect(() => {
-    // Reset audio element when line changes
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
     }
 
-    // Setup new audio for current line
     if (currentLine.audioUrl) {
       const audio = new Audio(currentLine.audioUrl);
       audioRef.current = audio;
@@ -49,18 +47,15 @@ const ScenePlayer: React.FC<ScenePlayerProps> = ({ scene, characters }) => {
       audio.addEventListener("ended", () => {
         if (currentLineIndex < scene.script.length - 1) {
           setCurrentLineIndex((prev) => prev + 1);
-          // Maintain playing state for next line
           if (shouldContinuePlayback) {
             setIsPlaying(true);
           }
         } else {
-          // Reset states at the end of the scene
           setIsPlaying(false);
           setShouldContinuePlayback(false);
         }
       });
 
-      // If we should continue playing, start the new audio
       if (shouldContinuePlayback) {
         audio.play();
         setIsPlaying(true);
@@ -108,7 +103,6 @@ const ScenePlayer: React.FC<ScenePlayerProps> = ({ scene, characters }) => {
   const handlePrevious = () => {
     if (currentLineIndex > 0) {
       setCurrentLineIndex((prev) => prev - 1);
-      // Maintain playback state when navigating
       if (shouldContinuePlayback) {
         setIsPlaying(true);
       }
@@ -118,21 +112,18 @@ const ScenePlayer: React.FC<ScenePlayerProps> = ({ scene, characters }) => {
   const handleNext = () => {
     if (currentLineIndex < scene.script.length - 1) {
       setCurrentLineIndex((prev) => prev + 1);
-      // Maintain playback state when navigating
       if (shouldContinuePlayback) {
         setIsPlaying(true);
       }
     }
   };
 
-  // Find character info by name
   const getCharacterByName = (name: string) => {
     return characters.find((char) => char.displayName === name);
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto">
-      {/* Scene container with background */}
+    <div className="w-full max-w-7xl mx-auto">
       <div className="relative w-full h-[600px] rounded-lg overflow-hidden mb-4">
         <Image
           src={scene.backgroundImageUrl}
@@ -143,7 +134,6 @@ const ScenePlayer: React.FC<ScenePlayerProps> = ({ scene, characters }) => {
           sizes="(max-width: 1536px) 100vw, 1536px"
         />
 
-        {/* Character portraits */}
         {Object.entries(scene.characterPositions).map(
           ([characterName, position]) => {
             const character = getCharacterByName(characterName);
@@ -154,9 +144,9 @@ const ScenePlayer: React.FC<ScenePlayerProps> = ({ scene, characters }) => {
             return (
               <div
                 key={characterName}
-                className={`absolute bottom-0 w-48 h-72 transition-opacity ${positionToClassName[position]}`}
+                className={`absolute bottom-0 w-64 h-[450px] transition-all ${positionToClassName[position]}`}
                 style={{
-                  opacity: isActive ? 1 : 0.5,
+                  filter: isActive ? "brightness(100%)" : "brightness(50%)",
                 }}
               >
                 <div className="relative w-full h-full">
@@ -174,7 +164,6 @@ const ScenePlayer: React.FC<ScenePlayerProps> = ({ scene, characters }) => {
         )}
       </div>
 
-      {/* Dialog box */}
       <Card className="w-full">
         <CardContent className="p-6">
           <div className="font-semibold mb-2 text-lg">
@@ -190,7 +179,6 @@ const ScenePlayer: React.FC<ScenePlayerProps> = ({ scene, characters }) => {
         </CardContent>
       </Card>
 
-      {/* Playback controls */}
       <div className="flex justify-center items-center gap-4 mt-6 mb-4">
         <button
           onClick={handlePrevious}
@@ -237,7 +225,6 @@ const ScenePlayer: React.FC<ScenePlayerProps> = ({ scene, characters }) => {
         </button>
       </div>
 
-      {/* Progress indicator */}
       <div className="text-center text-sm text-gray-500">
         Line {currentLineIndex + 1} of {scene.script.length}
       </div>
@@ -246,3 +233,4 @@ const ScenePlayer: React.FC<ScenePlayerProps> = ({ scene, characters }) => {
 };
 
 export default ScenePlayer;
+
