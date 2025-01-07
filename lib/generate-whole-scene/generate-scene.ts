@@ -1,6 +1,10 @@
 import generateStructuredData from "@/lib/generate-structured-data";
 import { Character } from "@/types/character";
-import { Scene, SceneSchema } from "@/types/scene";
+import {
+  Scene,
+  SceneWithoutDBFields,
+  SceneWithoutDBFieldsSchema,
+} from "@/types/scene";
 import { Story } from "@/types/story";
 import { TEST_ELENA, TEST_STORY, TEST_THERON, TEST_VAREN } from "./test-data";
 
@@ -16,9 +20,7 @@ export default async function generateScene({
   characters,
   previousScenes,
   sceneIdea,
-}: GenerateSceneParams): Promise<
-  Omit<Scene, "id" | "createdAt" | "order" | "backgroundImageUrl">
-> {
+}: GenerateSceneParams): Promise<SceneWithoutDBFields> {
   const systemMessage = `You are a creative writing assistant specializing in immersive scene generation. Your role is to craft scenes that seamlessly blend dialogue, action, and narrative elements.
 
 Key responsibilities:
@@ -41,12 +43,7 @@ Generate a scene that incorporates these elements, using narration to enhance im
 
   return generateStructuredData({
     callName: "generateScene",
-    schema: SceneSchema.omit({
-      id: true,
-      createdAt: true,
-      order: true,
-      backgroundImageUrl: true,
-    }),
+    schema: SceneWithoutDBFieldsSchema,
     systemMessage,
     prompt: scenePrompt,
     temperature: 0.7,

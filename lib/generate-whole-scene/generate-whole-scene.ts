@@ -1,5 +1,5 @@
 import { Character } from "@/types/character";
-import { Scene } from "@/types/scene";
+import { Scene, SceneWithoutDBFields } from "@/types/scene";
 import { Story } from "@/types/story";
 import generateBulkCharactersAndPortraits from "../gen-bulk-characters-and-portraits";
 import generateIdeas from "./generate-ideas";
@@ -17,18 +17,30 @@ interface GenerateSceneParams {
   previousScenes: Scene[];
 }
 
+function addAudioUrlsToScript(
+  script: SceneWithoutDBFields["script"],
+  audioUrls: string[]
+): Scene["script"] {
+  return script.map((line, i) => ({
+    ...line,
+    audioUrl: audioUrls[i],
+  }));
+}
+
 export default async function generateWholeScene({
   story,
   existingCharacters,
   previousScenes,
 }: GenerateSceneParams): Promise<Scene> {
   await logger.info("Generating whole scene", { storyId: story.id });
+
   const ideas = await generateIdeas({
     story,
     existingCharacters,
     previousScenes,
   });
   await logger.info("Generated scene ideas", { ideas });
+
   const newCharacters = await generateBulkCharactersAndPortraits({
     characterIdeas: ideas.newCharacterIdeas,
     story,
@@ -37,8 +49,8 @@ export default async function generateWholeScene({
   const existingCharactersInScene: Character[] = existingCharacters.filter(
     (c) => ideas.existingCharacterIDsIncludedInScene.includes(c.id.toString())
   );
-
   const charactersInScene = [...existingCharactersInScene, ...newCharacters];
+
   const generatedScene = await generateScene({
     story,
     characters: charactersInScene,
@@ -60,16 +72,17 @@ export default async function generateWholeScene({
   ]);
   await logger.info("Generated audio for scene", { orderedAudioUrls });
 
-  generatedScene.script.forEach((line, i) => {
-    line.audioUrl = orderedAudioUrls[i];
-  });
+  const scriptWithAudio = addAudioUrlsToScript(
+    generatedScene.script,
+    orderedAudioUrls
+  );
 
   const scene = await insertScene({
     ...generatedScene,
+    script: scriptWithAudio,
     order: previousScenes.length + 1,
     backgroundImageUrl,
   });
-
   await logger.info("Inserted scene", { sceneId: scene.id });
 
   await updateJunctionTable({
@@ -89,4 +102,3 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     .then(console.log)
     .catch(console.error);
 }
-

@@ -38,3 +38,23 @@ export const SceneSchema = z.object({
 
 export type Scene = z.infer<typeof SceneSchema>;
 
+// AI types:
+
+const ScriptWithoutAudioSchema = z.array(
+  z.object({
+    characterName: z.string(),
+    text: z.string(),
+  })
+);
+
+export const SceneWithoutDBFieldsSchema = SceneSchema.omit({
+  id: true,
+  createdAt: true,
+  order: true,
+  backgroundImageUrl: true,
+}).extend({
+  script: ScriptWithoutAudioSchema,
+});
+
+export type SceneWithoutDBFields = z.infer<typeof SceneWithoutDBFieldsSchema>;
+
