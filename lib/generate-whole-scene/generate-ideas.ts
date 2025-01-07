@@ -28,6 +28,7 @@ export default async function generateIdeas({
   - For newCharacterIdeas, only include NEW characters not already in existingCharacters
   - New characters should serve clear narrative purposes and complement the existing cast
   - Use existingCharacterIDsIncludedInScene to list which existing characters appear in the scene. Instead of the character's name, use their ID
+  - Only add new characters if they will be in this next scene you are creating.
   
   # Scene Requirements
   - All characters in the sceneIdea MUST be either from existingCharacters (listed in existingCharacterIDsIncludedInScene) OR be defined first in newCharacterIdeas

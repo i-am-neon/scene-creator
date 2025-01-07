@@ -62,8 +62,8 @@ export default async function removeImageBackground({
       if (attempt < maxRetries - 1) {
         const delay = BASE_DELAY * Math.pow(2, attempt);
         await logger.warn("Background removal failed, retrying", {
-          error: errorDetails,
           attempt: attempt + 1,
+          error: errorDetails,
           nextAttemptDelay: delay,
         });
         await sleep(delay);

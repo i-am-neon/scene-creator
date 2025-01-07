@@ -38,10 +38,10 @@ export default async function generateStructuredData<T>({
       await logger.info("generateStructuredData success", {
         callName,
         attempt: attempt + 1,
+        result,
         systemMessage,
         prompt,
         temperature,
-        result,
       });
 
       return result;
@@ -56,8 +56,8 @@ export default async function generateStructuredData<T>({
         const delay = BASE_DELAY * Math.pow(2, attempt);
         await logger.warn("Structured data generation failed, retrying", {
           callName,
-          error: errorMessage,
           attempt: attempt + 1,
+          error: errorMessage,
           systemMessage,
           prompt,
           temperature,
