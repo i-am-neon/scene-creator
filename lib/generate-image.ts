@@ -32,13 +32,24 @@ export default async function generateImage({
   aspectRatio: AspectRatio;
   maxRetries?: number;
 }): Promise<string> {
+  // Clean prompt by removing newlines, quotes, and curly braces
+  const cleanedPrompt = prompt
+    .replace(/[\n\r]/g, " ")
+    .replace(/['"{}]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+
   let lastError: Error | null = null;
 
   for (let attempt = 0; attempt < maxRetries; attempt++) {
     try {
       const prediction = await replicate.predictions.create({
         model: "black-forest-labs/flux-1.1-pro-ultra",
-        input: { prompt, aspect_ratio: aspectRatio, output_format: "jpg" },
+        input: {
+          prompt: cleanedPrompt,
+          aspect_ratio: aspectRatio,
+          output_format: "jpg",
+        },
       });
 
       let result = "";
@@ -56,14 +67,14 @@ export default async function generateImage({
       await logger.info("Image generation succeeded", {
         attempt: attempt + 1,
         result,
-        prompt,
+        prompt: cleanedPrompt,
       });
       return result;
     } catch (error) {
       lastError = error as Error;
       const errorDetails = {
         message: error instanceof Error ? error.message : String(error),
-        prompt,
+        prompt: cleanedPrompt,
         // stack: error instanceof Error ? error.stack : undefined,
         name: error instanceof Error ? error.name : undefined,
         raw: error, // Include raw error for additional context
