@@ -10,7 +10,7 @@ export default async function generateStory(
   const [story, imageUrl] = await Promise.all([
     generateStoryData(worldIdea),
     generateImage({
-      aspectRatio: "1:1",
+      aspectRatio: "16:9",
       prompt: worldIdea,
     }),
   ]);

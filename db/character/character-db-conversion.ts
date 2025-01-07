@@ -16,7 +16,8 @@ export const toAppCharacter = (
   gender: supabaseCharacter.gender as Character["gender"],
   personality: supabaseCharacter.personality,
   backstory: supabaseCharacter.backstory,
-  physicalDescription: supabaseCharacter.physical_description,
+  physicalDescription:
+    supabaseCharacter.physical_description as Character["physicalDescription"],
   goals: supabaseCharacter.goals,
   relationships: supabaseCharacter.relationships,
   createdAt: supabaseCharacter.created_at,
