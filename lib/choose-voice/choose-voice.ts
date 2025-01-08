@@ -39,7 +39,7 @@ export default async function chooseVoice(
      )
      .join("\n")}
    
-   Select the most appropriate voice ID based on character traits and voice attributes.`,
+   Select the most appropriate voice ID based on character traits and voice attributes. make sure to return the "ID" field, not the voice name.`,
     temperature: 1,
   });
   return result.voiceId;
@@ -48,3 +48,4 @@ export default async function chooseVoice(
 if (import.meta.url === `file://${process.argv[1]}`) {
   chooseVoice(TEST_ELENA).then(console.log);
 }
+
