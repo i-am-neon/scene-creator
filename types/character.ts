@@ -16,7 +16,9 @@ const PhysicalDescriptionSchema = z.object({
     .describe("Typical attire, including style, materials, and colors"),
   accessories: z
     .string()
-    .describe("Jewelry, weapons, magical items, or other carried items"),
+    .describe(
+      "Jewelry, weapons, magical items, or other carried items. Describe what these items look like, don't just list the name."
+    ),
   distinctiveFeatures: z
     .string()
     .describe(
