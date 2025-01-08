@@ -24,9 +24,6 @@ const PhysicalDescriptionSchema = z.object({
     .describe(
       "Unique physical characteristics like birthmarks, tattoos, or unusual traits. Must not include any scarring or mutilation."
     ),
-  posture: z
-    .string()
-    .describe("How they carry themselves, typical stance or movement"),
   expression: z
     .string()
     .describe("Typical facial expression, demeanor, or characteristic look"),
