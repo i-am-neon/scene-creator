@@ -1,4 +1,4 @@
-import saveAudio from "@/db/save-audio";
+import saveElevenLabsAudio from "@/db/save-elevenlabs-audio";
 import elevenlabs from "./init-eleven-labs";
 import { getVoiceRateLimiter } from "./rate-limiter";
 import { ElevenLabsError, formatElevenLabsError } from "./elevenlabs-error";
@@ -25,7 +25,7 @@ export default async function genVoice({
     });
     await logger.info("Generated voice", { voiceId, text });
 
-    return await saveAudio({
+    return await saveElevenLabsAudio({
       stream: audio,
     });
   } catch (error) {

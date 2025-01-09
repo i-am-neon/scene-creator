@@ -4,7 +4,7 @@ import sanitizeFileName from "./lib/sanitize-file-name";
 import { Readable } from "stream";
 import { v4 as uuidv4 } from "uuid";
 
-export default async function saveAudio({
+export default async function saveElevenLabsAudio({
   stream,
 }: {
   stream: Readable;
