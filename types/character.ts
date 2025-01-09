@@ -41,7 +41,7 @@ export const CharacterSchema = z.object({
     .describe("usually the first name, or title followed by first/last name"),
   fullName: z.string(),
   age: z.number(),
-  gender: z.enum(["male", "female", "other"]),
+  gender: z.enum(["male", "female"]),
   personality: z.string(),
   physicalDescription: PhysicalDescriptionSchema,
   backstory: z.string(),

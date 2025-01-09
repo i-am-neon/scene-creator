@@ -1,7 +1,7 @@
 import generateStructuredData from "@/lib/generate-structured-data";
 import { CharacterPreSave } from "@/types/character";
 import { z } from "zod";
-import { TEST_ELENA } from "../generate-whole-scene/test-data";
+import { TEST_ELENA } from "../../generate-whole-scene/test-data";
 import getVoiceOptions from "./get-voice-options";
 import _ from "lodash";
 
