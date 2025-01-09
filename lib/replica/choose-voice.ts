@@ -67,7 +67,8 @@ export default async function chooseVoice(
       
       Select the most appropriate voice ID based on the character traits and voice attributes. 
       Provide clear reasoning for your choice, explaining how the voice characteristics match the character.
-      Return both the voice ID and your reasoning.`,
+      Return both the voice ID and your reasoning.
+      Make sure to return the **voice ID**, not the voice name. The voice ID will be a uuid.`,
       temperature: 0.7,
     });
 

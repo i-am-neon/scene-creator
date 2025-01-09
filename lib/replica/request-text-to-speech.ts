@@ -116,7 +116,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   (async () => {
     try {
       const result = await requestTextToSpeech({
-        speaker_id: "55cdf980-52c7-4827-8642-6827b54f4447",
+        speaker_id: "e27a4298-3cb2-4390-b105-c9f1985d092c",
         text: "Hello world!",
         user_metadata: {
           session_id: "test-session",

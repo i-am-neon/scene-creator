@@ -7,9 +7,9 @@ import generateScene from "./generate-scene";
 import { TEST_ELENA, TEST_MIRA, TEST_STORY, TEST_THERON } from "./test-data";
 import { insertScene } from "@/db/scene/insert-scene";
 import { updateJunctionTable } from "@/db/scene-character/update-junction-table";
-import genScriptAudio from "./gen-script-audio";
 import { logger } from "../logger";
 import genSceneImage from "./gen-scene-image";
+import genScriptAudio from "../replica/gen-script-audio";
 
 interface GenerateSceneParams {
   story: Story;
@@ -102,3 +102,4 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     .then(console.log)
     .catch(console.error);
 }
+

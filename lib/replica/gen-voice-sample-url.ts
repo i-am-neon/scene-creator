@@ -3,6 +3,7 @@ import { CharacterPreSave } from "@/types/character";
 import { z } from "zod";
 import { requestTextToSpeech } from "./request-text-to-speech";
 import saveReplicaAudio from "@/db/save-replica-audio";
+import { fetchVoice } from "./fetch-voice";
 
 const VoiceSampleSchema = z.object({
   text: z
@@ -37,7 +38,12 @@ export async function generateVoiceSampleUrl({
     temperature: 0.7,
   });
 
-  const { url } = await requestTextToSpeech({ speaker_id: voiceId, text });
+  const voice = await fetchVoice(voiceId);
+
+  const { url } = await requestTextToSpeech({
+    speaker_id: voice.defaultStyle.speakerId,
+    text,
+  });
   return saveReplicaAudio({ url });
 }
 

@@ -36,15 +36,23 @@ export async function fetchVoice(id: string): Promise<ReplicaVoice> {
       gender: voice.metadata.gender,
       voiceAge: voice.metadata.voiceAge,
       characteristics: voice.characteristics,
-      styles: voice.styles.map((style: { uuid: string; name: string }) => ({
-        id: style.uuid,
-        name: style.name,
-      })),
+      styles: voice.styles.map(
+        (style: { uuid: string; name: string; speaker_id: string }) => ({
+          id: style.uuid,
+          name: style.name,
+          speakerId: style.speaker_id,
+        })
+      ),
+      defaultStyle: {
+        id: voice.default_style.uuid,
+        name: voice.default_style.name,
+        speakerId: voice.default_style.speaker_id,
+      },
     };
   } catch (error) {
     await logger.error("Failed to fetch Replica voice", {
-      error: error instanceof Error ? error.stack : String(error),
       voiceId: id,
+      error: error instanceof Error ? error.stack : String(error),
     });
     throw error;
   }
@@ -55,7 +63,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   (async () => {
     try {
       // Replace with a valid voice ID for testing
-      const testVoiceId = "b582da67-34ae-4916-9b9c-984a653cdf42";
+      const testVoiceId = "3bebdf4c-de26-4f3a-af0a-14d183cdf441";
       const voice = await fetchVoice(testVoiceId);
       console.log("Fetched voice:", voice);
     } catch (error) {

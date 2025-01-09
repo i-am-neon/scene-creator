@@ -1,3 +1,9 @@
+type VoiceStyle = {
+  id: string;
+  name: string;
+  speakerId: string;
+};
+
 export interface ReplicaVoice {
   id: string;
   name: string;
@@ -6,8 +12,7 @@ export interface ReplicaVoice {
   gender: string;
   voiceAge: string;
   characteristics: string[];
-  styles: {
-    id: string;
-    name: string;
-  }[];
+  styles: VoiceStyle[];
+  defaultStyle: VoiceStyle;
 }
+

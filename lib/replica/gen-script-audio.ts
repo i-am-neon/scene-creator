@@ -56,6 +56,14 @@ export default async function genScriptAudio({
             : undefined,
       });
 
+      // Find the selected style
+      const selectedStyle = voice.styles.find((s) => s.id === styleId);
+      if (!selectedStyle?.speakerId) {
+        throw new Error(
+          `Could not find speakerId for style ${styleId} in voice ${voiceId}`
+        );
+      }
+
       // Generate prompts for PTTS
       const prompts = await generateSpeechPrompt({
         text: line.text,
@@ -63,15 +71,14 @@ export default async function genScriptAudio({
         isNarrator,
       });
 
-      // Generate audio
+      // Generate audio using the style's speaker_id
       const result = await requestPromptTextToSpeech({
         user_prompt: prompts.userPrompt,
         system_prompt: prompts.systemPrompt,
         conversation_history: conversationHistory,
         speech: {
-          speaker_id: voiceId,
+          speaker_id: selectedStyle.speakerId, // Use the style's speakerId
           text: line.text,
-          voice_preset_id: styleId,
           user_metadata: {
             session_id: uuidv4(),
           },
@@ -85,7 +92,7 @@ export default async function genScriptAudio({
         text: line.text,
         additional_context: JSON.stringify({
           character: line.characterName,
-          emotion: voice.styles.find((s) => s.id === styleId)?.name,
+          emotion: selectedStyle.name,
         }),
         target: "user",
       });
@@ -95,7 +102,8 @@ export default async function genScriptAudio({
       await logger.info("Generated audio for line", {
         character: line.characterName,
         textLength: line.text.length,
-        styleUsed: voice.styles.find((s) => s.id === styleId)?.name,
+        styleUsed: selectedStyle.name,
+        speakerIdUsed: selectedStyle.speakerId,
       });
     }
 
@@ -118,3 +126,28 @@ export default async function genScriptAudio({
   }
 }
 
+// Test
+if (import.meta.url === `file://${process.argv[1]}`) {
+  const testScript: Script = [
+    {
+      characterName: "Narrator",
+      text: "The storm raged outside as Captain Marcus addressed his crew.",
+    },
+    {
+      characterName: "Captain Marcus",
+      text: "We've faced worse than this, crew. Stay at your stations!",
+    },
+  ];
+
+  const characterIds = {
+    "Captain Marcus": 1,
+  };
+
+  genScriptAudio({
+    script: testScript,
+    characterIds,
+    narratorVoiceId: "39a22b49-4d11-453c-8777-f529415b4a07", // Example voice ID
+  })
+    .then(console.log)
+    .catch(console.error);
+}
