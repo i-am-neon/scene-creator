@@ -6,10 +6,10 @@ import generateCharacterPortraitUrl from "@/lib/generate-character-portrait-url/
 import { Character } from "@/types/character";
 import { CharacterIdea } from "@/types/character-idea";
 import { Story } from "@/types/story";
-import chooseVoice from "./choose-voice/choose-voice";
-import { generateVoiceSampleUrl } from "./elevenlabs/gen-voice-sample-url";
 import { TEST_STORY } from "./generate-whole-scene/test-data";
 import { logger } from "./logger";
+import { generateVoiceSampleUrl } from "./replica/gen-voice-sample-url";
+import chooseVoice from "./replica/choose-voice";
 
 export default async function generateBulkCharactersAndPortraits({
   characterIdeas,

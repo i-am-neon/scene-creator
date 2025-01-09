@@ -3,7 +3,7 @@ import { supabase } from "./lib/init-supabase";
 import sanitizeFileName from "./lib/sanitize-file-name";
 import { v4 as uuidv4 } from "uuid";
 
-export default async function saveAudio({
+export default async function saveReplicaAudio({
   url,
 }: {
   url: string;
@@ -67,7 +67,7 @@ export default async function saveAudio({
 if (import.meta.url === `file://${process.argv[1]}`) {
   (async () => {
     try {
-      const res = await saveAudio({
+      const res = await saveReplicaAudio({
         url: "https://storage-production20220131061146038100000006.s3.amazonaws.com/previews/55a0aad5-a739-402f-9cec-36b01ff81a41/a5c2591b-9fd9-4f92-b259-b1dbd9d4007c/a5c2591b-9fd9-4f92-b259-b1dbd9d4007c.wav?response-content-type=audio%2Fwav&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAW7JGOG73XHENOAE3%2F20250109%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20250109T212259Z&X-Amz-Expires=300&X-Amz-SignedHeaders=host&X-Amz-Signature=e1ff91fb7e6df7395de779b57222a7357280b1f77a3ecd940fcd07cf7d4f5dec",
       });
       console.log("Audio saved:", res);
