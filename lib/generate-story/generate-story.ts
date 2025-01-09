@@ -3,6 +3,7 @@ import { Story } from "@/types/story";
 import { v4 as uuidv4 } from "uuid";
 import generateImage from "../generate-image";
 import generateStoryData from "./generate-story-data";
+import chooseNarratorVoice from "../replica/choose-narrator-voice";
 
 export default async function generateStory(
   worldIdea: string
@@ -25,11 +26,13 @@ export default async function generateStory(
     throw new Error("Failed to save image.");
   }
 
+  const narratorVoiceId = await chooseNarratorVoice(story);
+
   return {
     ...story,
     imageUrl: publicImageUrl,
     worldIdea,
-    narratorVoiceId: "S9EGwlCtMF7VXtENq79v",
+    narratorVoiceId,
   };
 }
 

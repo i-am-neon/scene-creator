@@ -3,6 +3,9 @@ import { logger } from "../logger";
 
 const REPLICA_API_BASE = "https://api.replicastudios.com/v2";
 
+// List of banned voice IDs
+const BANNED_VOICE_IDS = ["5f176823-8239-42aa-9326-ca5a82f7e4ad"] as const;
+
 export async function fetchVoices(): Promise<ReplicaVoice[]> {
   try {
     const apiKey = process.env.REPLICA_API_KEY;
@@ -27,21 +30,25 @@ export async function fetchVoices(): Promise<ReplicaVoice[]> {
     }
 
     const data = await response.json();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const voices: ReplicaVoice[] = data.items.map((voice: any) => ({
-      id: voice.uuid,
-      name: voice.name,
-      description: voice.description,
-      accent: voice.metadata.accent,
-      gender: voice.metadata.gender,
-      voiceAge: voice.metadata.voiceAge,
-      characteristics: voice.characteristics,
+    const voices: ReplicaVoice[] = data.items
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      styles: voice.styles.map((style: any) => ({
-        id: style.uuid,
-        name: style.name,
-      })),
-    }));
+      .filter((voice: any) => !BANNED_VOICE_IDS.includes(voice.uuid))
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .map((voice: any) => ({
+        id: voice.uuid,
+        name: voice.name,
+        description: voice.description,
+        accent: voice.metadata.accent,
+        gender: voice.metadata.gender,
+        voiceAge: voice.metadata.voiceAge,
+        characteristics: voice.characteristics,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        styles: voice.styles.map((style: any) => ({
+          id: style.uuid,
+          name: style.name,
+        })),
+      }));
+
     return voices;
   } catch (error) {
     await logger.error("Failed to fetch Replica voices", {
@@ -62,4 +69,3 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     }
   })();
 }
-

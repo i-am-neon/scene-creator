@@ -12,7 +12,9 @@ export const StoryOverviewSchema = z.object({
   premise: z.string(),
   mainCharacterIdeas: z
     .array(CharacterIdeaSchema)
-    .describe("1 - 3 main characters"),
+    .describe(
+      "1 - 3 main characters. Each should have a unique name. Don't use generic character names like 'Aria'"
+    ),
 });
 
 export type StoryOverview = z.infer<typeof StoryOverviewSchema>;

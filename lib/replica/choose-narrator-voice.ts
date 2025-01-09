@@ -13,7 +13,7 @@ const VoiceSelectionSchema = z.object({
 export type VoiceSelection = z.infer<typeof VoiceSelectionSchema>;
 
 export default async function chooseNarratorVoice(
-  story: Story
+  story: Omit<Story, "id" | "createdAt" | "imageUrl" | "narratorVoiceId">
 ): Promise<string> {
   try {
     // Fetch all available voices
@@ -67,7 +67,8 @@ export default async function chooseNarratorVoice(
       
       Select the most appropriate narrator voice ID based on the story's characteristics and voice attributes.
       Consider how well the voice can carry the narrative and maintain engagement throughout the story.
-      Return both the voice ID and your reasoning.`,
+      Return both the voice ID and your reasoning.
+      Make sure to return the **voice ID**, not the voice name. The voice ID will be a uuid.`,
       temperature: 0.7,
     });
 
@@ -120,3 +121,4 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     .then((voiceId) => console.log("Selected narrator voice ID:", voiceId))
     .catch(console.error);
 }
+
