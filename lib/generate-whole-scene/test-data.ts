@@ -64,8 +64,6 @@ export const TEST_ELENA: Character = {
       "Reading glasses, leather document satchel, concealed crystal pendant, writing implements",
     distinctiveFeatures:
       "Barely visible magical sigils on her palms that shimmer faintly when she's emotional",
-    posture:
-      "Often slightly hunched over books, but straightens with unexpected grace when alert",
     expression:
       "Carefully neutral and studious, but with an observant intensity in her eyes",
   },
@@ -109,7 +107,6 @@ export const TEST_THERON: Character = {
       "Anti-magic detector gear, ceremonial sword, inquisitor's badge of office",
     distinctiveFeatures:
       "Subtle magical suppression runes embedded in his uniform's threading",
-    posture: "Rigid military bearing with precise, controlled movements",
     expression: "Stern and watchful, with rare moments of hidden empathy",
   },
   backstory:
@@ -152,7 +149,6 @@ export const TEST_MIRA: Character = {
       "Hidden magical artifacts, enchanted daggers, resistance leader's medallion",
     distinctiveFeatures:
       "Subtle magical aura visible to other mages, birthmark shaped like a crescent moon",
-    posture: "Confident and balanced, ready for action",
     expression: "Determined and fierce, with a charismatic presence",
   },
   backstory:
@@ -195,7 +191,6 @@ export const TEST_VAREN: Character = {
       "Councilor's staff of office, various rings of political significance",
     distinctiveFeatures:
       "Ancient magical signet ring disguised as a Council seal",
-    posture: "Measured and deliberate with perfect political poise",
     expression: "Carefully neutral with hints of hidden knowledge",
   },
   backstory:
@@ -211,3 +206,4 @@ export const TEST_VAREN: Character = {
     "Distant mentorship with select young potential mages",
   ],
 };
+
