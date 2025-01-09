@@ -40,6 +40,21 @@ if (import.meta.url === `file://${process.argv[1]}`) {
       "A decorated military officer with distinctive silver-streaked black hair and a prominent scar across her left cheek. Known for wearing ceremonial armor with golden accents.",
     goals: ["Protect her people", "Find inner peace"],
     relationships: [],
+    physicalDescription: {
+      hairStyle: "Neatly combed back, perfectly maintained",
+      hairColor: "Pure silver-white",
+      eyeColor: "Sharp gray with decades of wisdom",
+      skinTone: "Pale and aristocratic",
+      build: "Tall and lean with an elderly yet dignified bearing",
+      facialFeatures: "Distinguished aquiline features, high forehead",
+      clothing:
+        "Formal Council robes in deep blue and silver with subtle magical preservation runes",
+      accessories:
+        "Councilor's staff of office, various rings of political significance",
+      distinctiveFeatures:
+        "Ancient magical signet ring disguised as a Council seal",
+      expression: "Carefully neutral with hints of hidden knowledge",
+    },
   };
   generateCharacterPortraitUrl(testCharacter).then(console.log);
 }
