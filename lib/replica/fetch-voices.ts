@@ -42,7 +42,6 @@ export async function fetchVoices(): Promise<ReplicaVoice[]> {
         name: style.name,
       })),
     }));
-    console.log("voices.length :>> ", voices.length);
     return voices;
   } catch (error) {
     await logger.error("Failed to fetch Replica voices", {

@@ -55,7 +55,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   (async () => {
     try {
       // Replace with a valid voice ID for testing
-      const testVoiceId = "e6a1342b-ae78-4ce3-b2e1-8fa040601d4f";
+      const testVoiceId = "b582da67-34ae-4916-9b9c-984a653cdf42";
       const voice = await fetchVoice(testVoiceId);
       console.log("Fetched voice:", voice);
     } catch (error) {
