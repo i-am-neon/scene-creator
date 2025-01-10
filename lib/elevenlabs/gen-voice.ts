@@ -1,11 +1,11 @@
 import saveElevenLabsAudio from "@/db/save-elevenlabs-audio";
-import elevenlabs from "./init-eleven-labs";
-import { getVoiceRateLimiter } from "./rate-limiter";
-import { ElevenLabsError, formatElevenLabsError } from "./elevenlabs-error";
 import { logger } from "../logger";
-import { voiceOptions } from "./voice-options/voice-options";
+import { ElevenLabsError, formatElevenLabsError } from "./elevenlabs-error";
+import elevenlabs from "./init-eleven-labs";
 import { addVoiceToMyVoices } from "./my-voices/add-voice-to-my-voices";
 import { deleteVoiceFromMyVoices } from "./my-voices/delete-voice-from-my-voices";
+import { getVoiceRateLimiter } from "./rate-limiter";
+import { voiceOptionsMap } from "./voice-options/voice-options";
 
 export default async function genVoice({
   voiceId,
@@ -18,7 +18,7 @@ export default async function genVoice({
 
   try {
     // First add the voice to My Voices
-    const voice = voiceOptions.find((v) => v.voice_id === voiceId);
+    const voice = voiceOptionsMap[voiceId];
     if (!voice) {
       throw new Error(`Voice not found for ID ${voiceId}`);
     }
