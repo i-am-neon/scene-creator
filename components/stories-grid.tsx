@@ -16,7 +16,7 @@ export default async function StoriesGrid() {
     >
       {stories.map((story) => (
         <Link href={`/stories/${story.id}`} key={story.id}>
-          <li className="col-span-1 flex flex-col divide-y divide-gray-200 rounded-lg bg-white text-center shadow hover:shadow-lg transition-shadow">
+          <li className="col-span-1 flex flex-col divide-y divide-gray-200 dark:divide-gray-800 rounded-lg bg-white dark:bg-gray-950 text-center shadow hover:shadow-lg transition-shadow">
             <div className="flex flex-1 flex-col p-4">
               <div className="relative w-full aspect-video overflow-hidden rounded-lg">
                 <Image
@@ -27,12 +27,14 @@ export default async function StoriesGrid() {
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
               </div>
-              <h3 className="mt-4 text-sm font-medium text-gray-900">
+              <h3 className="mt-4 text-sm font-medium text-gray-900 dark:text-gray-100">
                 {story.title}
               </h3>
               <dl className="mt-1 flex grow flex-col justify-between">
                 <dt className="sr-only">Title</dt>
-                <dd className="text-sm text-gray-500">{story.worldIdea}</dd>
+                <dd className="text-sm text-gray-500 dark:text-gray-400">
+                  {story.worldIdea}
+                </dd>
                 <dt className="sr-only">Role</dt>
               </dl>
             </div>
