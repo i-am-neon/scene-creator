@@ -35,7 +35,7 @@ export async function generateVoiceSampleUrl({
     schema: VoiceSampleSchema,
     systemMessage,
     prompt,
-    temperature: 0.7,
+    temperature: 1,
   });
 
   await addVoiceToMyVoices({
