@@ -6,7 +6,6 @@ import fetchAllVoices from "./fetch-all-voices";
 import { LibraryVoiceResponse } from "elevenlabs/api";
 
 function transformVoiceData(voice: LibraryVoiceResponse): LibraryVoiceResponse {
-  // Convert null social media fields to undefined
   return {
     ...voice,
     instagram_username: voice.instagram_username ?? undefined,
@@ -37,6 +36,17 @@ export const voiceOptionsMap: Record<string, LibraryVoiceResponse> = voiceOption
   ...acc,
   [voice.voice_id]: voice
 }), {});
+
+type Gender = "male" | "female" | "other";
+
+export function getVoicesByGender(gender: Gender): LibraryVoiceResponse[] {
+  if (gender === "other") {
+    return voiceOptions.filter(voice => 
+      voice.gender !== "male" && voice.gender !== "female"
+    );
+  }
+  return voiceOptions.filter(voice => voice.gender === gender);
+}
 `;
 
     const filePath = join(

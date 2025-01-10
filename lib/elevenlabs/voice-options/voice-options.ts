@@ -1,4 +1,4 @@
-// Generated on 2025-01-10T01:37:44.728Z
+// Generated on 2025-01-10T01:46:55.893Z
 // This file is auto-generated. Do not edit directly.
 
 import { LibraryVoiceResponse } from "elevenlabs/api";
@@ -4106,3 +4106,14 @@ export const voiceOptionsMap: Record<string, LibraryVoiceResponse> = voiceOption
   ...acc,
   [voice.voice_id]: voice
 }), {});
+
+type Gender = "male" | "female" | "other";
+
+export function getVoicesByGender(gender: Gender): LibraryVoiceResponse[] {
+  if (gender === "other") {
+    return voiceOptions.filter(voice => 
+      voice.gender !== "male" && voice.gender !== "female"
+    );
+  }
+  return voiceOptions.filter(voice => voice.gender === gender);
+}
