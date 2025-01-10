@@ -27,12 +27,67 @@ const positionToClassName: Record<keyof CharacterPositionMap, string> = {
   "far-right": "right-0",
 };
 
+const FADE_DURATION = 2; // seconds
+const MAX_MUSIC_VOLUME = 0.25;
+
 const ScenePlayer: React.FC<ScenePlayerProps> = ({ scene, characters }) => {
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [shouldContinuePlayback, setShouldContinuePlayback] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const bgMusicRef = useRef<HTMLAudioElement | null>(null);
+  const fadeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const currentLine = scene.script[currentLineIndex];
+
+  useEffect(() => {
+    // Initialize background music
+    if (scene.backgroundAudioUrl) {
+      const bgMusic = new Audio(scene.backgroundAudioUrl);
+      bgMusic.loop = true;
+      bgMusic.volume = 0;
+      bgMusicRef.current = bgMusic;
+
+      // Handle music loop with fade
+      bgMusic.addEventListener("timeupdate", () => {
+        const timeLeft = bgMusic.duration - bgMusic.currentTime;
+        if (timeLeft <= FADE_DURATION) {
+          // Start fade out
+          const fadeOutInterval = setInterval(() => {
+            if (bgMusic.volume > 0) {
+              bgMusic.volume = Math.max(0, bgMusic.volume - 0.1);
+            }
+          }, 100);
+
+          // Schedule fade in
+          fadeTimeoutRef.current = setTimeout(() => {
+            bgMusic.currentTime = 0;
+            const fadeInInterval = setInterval(() => {
+              if (bgMusic.volume < 1) {
+                bgMusic.volume = Math.min(0.5, bgMusic.volume + 0.1);
+              } else {
+                clearInterval(fadeInInterval);
+              }
+            }, 100);
+          }, FADE_DURATION * 1000);
+
+          setTimeout(
+            () => clearInterval(fadeOutInterval),
+            FADE_DURATION * 1000
+          );
+        }
+      });
+    }
+
+    return () => {
+      if (bgMusicRef.current) {
+        bgMusicRef.current.pause();
+        bgMusicRef.current.remove();
+      }
+      if (fadeTimeoutRef.current) {
+        clearTimeout(fadeTimeoutRef.current);
+      }
+    };
+  }, [scene.backgroundAudioUrl]);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -81,14 +136,34 @@ const ScenePlayer: React.FC<ScenePlayerProps> = ({ scene, characters }) => {
       setIsPlaying(true);
       setShouldContinuePlayback(true);
     }
+    if (bgMusicRef.current) {
+      bgMusicRef.current.play();
+      // Fade in background music
+      const fadeIn = setInterval(() => {
+        if (
+          bgMusicRef.current &&
+          bgMusicRef.current.volume < MAX_MUSIC_VOLUME
+        ) {
+          bgMusicRef.current.volume = Math.min(
+            1,
+            bgMusicRef.current.volume + 0.1
+          );
+        } else {
+          clearInterval(fadeIn);
+        }
+      }, 100);
+    }
   };
 
   const handlePause = () => {
     if (audioRef.current) {
       audioRef.current.pause();
-      setIsPlaying(false);
-      setShouldContinuePlayback(false);
     }
+    if (bgMusicRef.current) {
+      bgMusicRef.current.pause();
+    }
+    setIsPlaying(false);
+    setShouldContinuePlayback(false);
   };
 
   const handleReset = () => {
@@ -97,6 +172,23 @@ const ScenePlayer: React.FC<ScenePlayerProps> = ({ scene, characters }) => {
       audioRef.current.currentTime = 0;
       setIsPlaying(false);
       setShouldContinuePlayback(false);
+    }
+    if (bgMusicRef.current) {
+      // Fade out background music
+      const fadeOut = setInterval(() => {
+        if (bgMusicRef.current && bgMusicRef.current.volume > 0) {
+          bgMusicRef.current.volume = Math.max(
+            0,
+            bgMusicRef.current.volume - 0.1
+          );
+        } else {
+          if (bgMusicRef.current) {
+            bgMusicRef.current.pause();
+            bgMusicRef.current.currentTime = 0;
+          }
+          clearInterval(fadeOut);
+        }
+      }, 100);
     }
   };
 
@@ -233,4 +325,3 @@ const ScenePlayer: React.FC<ScenePlayerProps> = ({ scene, characters }) => {
 };
 
 export default ScenePlayer;
-
