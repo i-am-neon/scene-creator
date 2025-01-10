@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { readCharacter } from "@/db/character/read-character";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import VoicePlayer from "./components/audio-player";
+import MyAudioPlayer from "./components/audio-player";
 
 export default async function CharacterPage({
   params,
@@ -30,7 +30,7 @@ export default async function CharacterPage({
             />
           </div>
           {character.voiceSampleUrl && (
-            <VoicePlayer url={character.voiceSampleUrl} />
+            <MyAudioPlayer url={character.voiceSampleUrl} />
           )}
         </div>
 

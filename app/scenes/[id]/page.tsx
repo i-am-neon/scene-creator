@@ -6,6 +6,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import ScenePlayer from "./components/scene-player";
 import ScriptPlayer from "./components/script-player";
+import MyAudioPlayer from "@/app/characters/[id]/components/audio-player";
 
 export default async function ScenePage({
   params,
@@ -20,7 +21,7 @@ export default async function ScenePage({
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-8">
       <div className="relative w-full h-96">
         <Image
           src={scene.backgroundImageUrl}
@@ -75,6 +76,14 @@ export default async function ScenePage({
           </CardHeader>
           <CardContent>
             <ScriptPlayer script={scene.script} />
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Background Music</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <MyAudioPlayer url={scene.backgroundAudioUrl} />
           </CardContent>
         </Card>
       </div>

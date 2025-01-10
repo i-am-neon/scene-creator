@@ -6,7 +6,7 @@ interface VoicePlayerProps {
   url: string;
 }
 
-export default function VoicePlayer({ url }: VoicePlayerProps) {
+export default function MyAudioPlayer({ url }: VoicePlayerProps) {
   return (
     <div className="mt-4">
       <AudioPlayer
