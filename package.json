@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "db-types": "supabase gen types typescript --project-id oeivscefnzpuiynswsue > types/database.types.ts",
-    "clear-logs": "bun lib/clear-logs-cli.ts"
+    "clear-logs": "bun lib/clear-logs-cli.ts",
+    "cache-voices": "bun lib/elevenlabs/voice-options/save-voice-options-to-file.ts"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^1.0.6",
@@ -51,3 +52,4 @@
     "@eslint/eslintrc": "^3"
   }
 }
+
