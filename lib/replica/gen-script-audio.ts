@@ -3,17 +3,8 @@ import { readCharacter } from "@/db/character/read-character";
 import { logger } from "@/lib/logger";
 import { fetchVoice } from "./fetch-voice";
 import chooseVoiceStyle from "./choose-voice-style";
-import { requestPromptTextToSpeech } from "./request-prompt-text-to-speech";
+import { requestTextToSpeech } from "./request-text-to-speech";
 import { v4 as uuidv4 } from "uuid";
-import generateSpeechPrompt from "./gen-speech-prompt";
-import { CharacterPreSave } from "@/types/character";
-
-interface ConversationEntry {
-  source: string;
-  text: string;
-  additional_context: string | null;
-  target: string;
-}
 
 export default async function genScriptAudio({
   script,
@@ -24,8 +15,8 @@ export default async function genScriptAudio({
   characterIds: Record<string, number>;
   narratorVoiceId: string;
 }): Promise<string[]> {
-  const conversationHistory: ConversationEntry[] = [];
   const audioUrls: string[] = [];
+  let previousText: string | undefined;
 
   try {
     for (const line of script) {
@@ -41,69 +32,38 @@ export default async function genScriptAudio({
       // Get voice details
       const voice = await fetchVoice(voiceId);
 
-      // Get character details if not narrator
-      const character = !isNarrator
-        ? await readCharacter(characterIds[line.characterName])
-        : undefined;
-
       // Choose voice style based on line content
       const styleId = await chooseVoiceStyle({
         text: line.text,
         voice,
-        context:
-          conversationHistory.length > 0
-            ? conversationHistory[conversationHistory.length - 1].text
-            : undefined,
+        context: previousText,
       });
 
       // Find the selected style
       const selectedStyle = voice.styles.find((s) => s.id === styleId);
-      if (!selectedStyle?.speakerId) {
-        throw new Error(
-          `Could not find speakerId for style ${styleId} in voice ${voiceId}`
-        );
+      if (!selectedStyle) {
+        throw new Error(`Could not find style ${styleId} in voice ${voiceId}`);
       }
 
-      // Generate prompts for PTTS
-      const prompts = await generateSpeechPrompt({
+      // Generate audio using text-to-speech
+      const result = await requestTextToSpeech({
+        speaker_id: voiceId,
         text: line.text,
-        character: character as CharacterPreSave,
-        isNarrator,
-      });
-
-      // Generate audio using the style's speaker_id
-      const result = await requestPromptTextToSpeech({
-        user_prompt: prompts.userPrompt,
-        system_prompt: prompts.systemPrompt,
-        conversation_history: conversationHistory,
-        speech: {
-          speaker_id: selectedStyle.speakerId, // Use the style's speakerId
-          text: line.text,
-          user_metadata: {
-            session_id: uuidv4(),
-          },
-          user_tags: [line.characterName],
+        voice_preset_id: styleId, // Use the selected style ID
+        user_metadata: {
+          session_id: uuidv4(),
         },
-      });
-
-      // Update conversation history
-      conversationHistory.push({
-        source: "assistant",
-        text: line.text,
-        additional_context: JSON.stringify({
-          character: line.characterName,
-          emotion: selectedStyle.name,
-        }),
-        target: "user",
+        user_tags: [line.characterName],
       });
 
       audioUrls.push(result.url);
+      previousText = line.text;
 
       await logger.info("Generated audio for line", {
         character: line.characterName,
         textLength: line.text.length,
         styleUsed: selectedStyle.name,
-        speakerIdUsed: selectedStyle.speakerId,
+        voiceId,
       });
     }
 
