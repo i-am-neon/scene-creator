@@ -12,10 +12,6 @@ export async function deleteVoiceFromMyVoices(
     });
     return true;
   } catch (error) {
-    await logger.error(`Failed to delete voice`, {
-      voiceId,
-      error: error instanceof Error ? error.stack : String(error),
-    });
     return false;
   }
 }

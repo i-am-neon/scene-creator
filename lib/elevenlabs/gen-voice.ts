@@ -14,10 +14,8 @@ export default async function genVoice({
   const rateLimiter = getVoiceRateLimiter();
 
   try {
-    await logger.info("Waiting for rate limiter slot", { voiceId, text });
     await rateLimiter.acquire();
 
-    await logger.info("Generating voice", { voiceId, text });
     const audio = await elevenlabs.generate({
       voice: voiceId,
       text,

@@ -16,13 +16,7 @@ export async function deleteAllMyVoices(): Promise<void> {
           voiceId: voice.voice_id,
           voiceName: voice.name,
         });
-      } catch (error) {
-        await logger.error(`Failed to delete voice`, {
-          voiceId: voice.voice_id,
-          voiceName: voice.name,
-          error: error instanceof Error ? error.stack : String(error),
-        });
-      }
+      } catch (_) {}
     });
 
     // Wait for all deletions to complete
