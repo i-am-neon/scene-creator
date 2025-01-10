@@ -13,7 +13,7 @@ export const StoryOverviewSchema = z.object({
   mainCharacterIdeas: z
     .array(CharacterIdeaSchema)
     .describe(
-      "1 - 3 main characters. Each should have a unique name. Don't use generic character names like 'Aria'"
+      "1 - 3 main characters. Each should have a unique name. Don't use generic character names like 'Aria', 'Lyra', 'Kael', etc."
     ),
 });
 
