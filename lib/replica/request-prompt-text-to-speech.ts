@@ -1,6 +1,10 @@
 import { logger } from "../logger";
 
 const REPLICA_API_BASE = "https://api.replicastudios.com/v2";
+const DEFAULT_MAX_RETRIES = 3;
+const BASE_DELAY = 1000;
+
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 interface ConversationEntry {
   source: string;
@@ -36,6 +40,7 @@ interface PTTSRequestOptions {
   system_prompt?: string;
   conversation_history?: ConversationEntry[];
   speech: SpeechOptions;
+  maxRetries?: number;
 }
 
 interface PTTSResponse {
@@ -60,45 +65,77 @@ const DEFAULT_SPEECH_OPTIONS: Partial<SpeechOptions> = {
 export async function requestPromptTextToSpeech(
   options: PTTSRequestOptions
 ): Promise<PTTSResponse> {
-  try {
-    const apiKey = process.env.REPLICA_API_KEY;
-    if (!apiKey) {
-      throw new Error("REPLICA_API_KEY not found in environment variables");
-    }
+  let lastError: Error | null = null;
+  const maxRetries = options.maxRetries || DEFAULT_MAX_RETRIES;
 
-    const requestOptions = {
-      ...options,
-      speech: {
-        ...DEFAULT_SPEECH_OPTIONS,
-        ...options.speech,
-      },
-    };
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      const apiKey = process.env.REPLICA_API_KEY;
+      if (!apiKey) {
+        throw new Error("REPLICA_API_KEY not found in environment variables");
+      }
 
-    const response = await fetch(`${REPLICA_API_BASE}/speech/ptts`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Api-Key": apiKey,
-      },
-      body: JSON.stringify(requestOptions),
-    });
+      const requestOptions = {
+        ...options,
+        speech: {
+          ...DEFAULT_SPEECH_OPTIONS,
+          ...options.speech,
+        },
+      };
 
-    if (!response.ok) {
-      throw new Error(
-        `Failed to generate prompt speech: ${response.status} ${response.statusText}`
+      const response = await fetch(`${REPLICA_API_BASE}/speech/ptts`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Api-Key": apiKey,
+        },
+        body: JSON.stringify(requestOptions),
+      });
+
+      if (!response.ok) {
+        throw new Error(
+          `Failed to generate prompt speech: ${response.status} ${response.statusText}`
+        );
+      }
+
+      const data: PTTSResponse = await response.json();
+      return data;
+    } catch (error) {
+      lastError = error as Error;
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+
+      if (attempt < maxRetries - 1) {
+        const delay = BASE_DELAY * Math.pow(2, attempt);
+        await logger.warn("Prompt text-to-speech generation failed, retrying", {
+          error: errorMessage,
+          attempt: attempt + 1,
+          nextAttemptDelay: delay,
+          userPrompt: options.user_prompt,
+          speakerId: options.speech.speaker_id,
+          stack: error instanceof Error ? error.stack : undefined,
+        });
+        await sleep(delay);
+        continue;
+      }
+
+      await logger.error(
+        "Prompt text-to-speech generation failed permanently",
+        {
+          error: error instanceof Error ? error.stack : String(error),
+          attempts: attempt + 1,
+          userPrompt: options.user_prompt,
+          speakerId: options.speech.speaker_id,
+        }
       );
+      throw error;
     }
-
-    const data: PTTSResponse = await response.json();
-    return data;
-  } catch (error) {
-    await logger.error("Failed to generate prompt text-to-speech", {
-      error: error instanceof Error ? error.stack : String(error),
-      userPrompt: options.user_prompt,
-      speakerId: options.speech.speaker_id,
-    });
-    throw error;
   }
+
+  throw (
+    lastError ||
+    new Error(`Failed to generate speech after ${maxRetries} attempts`)
+  );
 }
 
 // Test with Bun

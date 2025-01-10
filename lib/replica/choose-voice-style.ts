@@ -47,9 +47,9 @@ export default async function chooseVoiceStyle({
 
     await logger.info("Voice style selected", {
       text: text.substring(0, 100), // Log only the first 100 chars
+      voiceName: voice.name,
       selectedStyle: result.styleId,
       reasoning: result.reasoning,
-      voiceName: voice.name,
     });
 
     return result.styleId;
@@ -66,28 +66,38 @@ export default async function chooseVoiceStyle({
 // Test
 if (import.meta.url === `file://${process.argv[1]}`) {
   const testVoice: ReplicaVoice = {
-    id: "e6a1342b-ae78-4ce3-b2e1-8fa040601d4f",
-    name: "Steel",
+    id: "2cabd0a1-49c4-4720-8fc8-edc5ce95d686",
+    name: "Ava",
     description:
-      "When Steel speaks, you know who's in-charge. Whether he's barking orders or giving a briefing, this seasoned battlefield veteran commands the room and the troops with aplomb.",
-    accent: "american",
-    gender: "male",
-    voiceAge: "middleaged",
-    characteristics: ["Authoritative", "Clear", "Commanding"],
+      "There's nothing artificial with Ava's intelligence. She's the soul of the perfect android and the voice of a sophisticated humanoid. And if you're not paying attention, Ava is sometimes, more human than human.",
+    accent: "british",
+    gender: "female",
+    voiceAge: "youngadult",
+    characteristics: [
+      "Calm",
+      "Clean",
+      "Formal",
+      "Gentle",
+      "Smooth",
+      "Voice-over",
+    ],
     styles: [
       {
-        id: "0c386d66-0af2-40f4-bb27-9afe12440b5e",
-        name: "Barking Orders",
+        id: "da285f00-516c-43e2-a74c-036dd38ee072",
+        name: "Urgent",
+        speakerId: "015bf234-12b9-4a1a-bb14-255afa89cd72",
       },
       {
-        id: "85b8b854-54ba-4468-8f76-19c1d7abb1b1",
-        name: "Storyteller",
-      },
-      {
-        id: "be9ac45e-5ed7-4568-bfd9-dc0cb5e53b87",
-        name: "Briefing",
+        id: "619b4f32-6d41-43a2-bc43-4a3466783eb6",
+        name: "Polite",
+        speakerId: "55a0aad5-a739-402f-9cec-36b01ff81a41",
       },
     ],
+    defaultStyle: {
+      id: "619b4f32-6d41-43a2-bc43-4a3466783eb6",
+      name: "Polite",
+      speakerId: "55a0aad5-a739-402f-9cec-36b01ff81a41",
+    },
   };
 
   chooseVoiceStyle({
