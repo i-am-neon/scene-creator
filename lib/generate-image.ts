@@ -1,5 +1,6 @@
 import Replicate from "replicate";
 import { logger } from "./logger";
+import { refinePrompt } from "./refine-prompt";
 
 type AspectRatio =
   | "1:1"
@@ -16,6 +17,7 @@ type AspectRatio =
 
 const DEFAULT_MAX_RETRIES = 3;
 const BASE_DELAY = 1000;
+const NSFW_ERROR_PATTERN = /NSFW content detected/i;
 
 const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN,
@@ -32,21 +34,26 @@ export default async function generateImage({
   aspectRatio: AspectRatio;
   maxRetries?: number;
 }): Promise<string> {
-  // Clean prompt by removing newlines, quotes, and curly braces
-  const cleanedPrompt = prompt
+  let currentPrompt = prompt
     .replace(/[\n\r]/g, " ")
     .replace(/['"{}]/g, "")
     .replace(/\s+/g, " ")
     .trim();
 
   let lastError: Error | null = null;
+  let needsRefinement = false;
 
   for (let attempt = 0; attempt < maxRetries; attempt++) {
     try {
+      if (needsRefinement) {
+        currentPrompt = await refinePrompt(currentPrompt);
+        needsRefinement = false;
+      }
+
       const prediction = await replicate.predictions.create({
         model: "black-forest-labs/flux-1.1-pro-ultra",
         input: {
-          prompt: cleanedPrompt,
+          prompt: currentPrompt,
           aspect_ratio: aspectRatio,
           output_format: "jpg",
           safety_tolerance: 6,
@@ -68,17 +75,28 @@ export default async function generateImage({
       await logger.info("Image generation succeeded", {
         attempt: attempt + 1,
         result,
-        prompt: cleanedPrompt,
+        prompt: currentPrompt,
+        wasRefined: currentPrompt !== prompt,
       });
+
       return result;
     } catch (error) {
       lastError = error as Error;
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      const isNSFWError = NSFW_ERROR_PATTERN.test(errorMessage);
+
+      if (isNSFWError && !needsRefinement) {
+        needsRefinement = true;
+        continue;
+      }
+
       const errorDetails = {
-        message: error instanceof Error ? error.message : String(error),
-        prompt: cleanedPrompt,
-        // stack: error instanceof Error ? error.stack : undefined,
+        message: errorMessage,
+        prompt: currentPrompt,
         name: error instanceof Error ? error.name : undefined,
-        raw: error, // Include raw error for additional context
+        raw: error,
+        isNSFWError,
       };
 
       if (attempt < maxRetries - 1) {
@@ -107,11 +125,12 @@ export default async function generateImage({
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const image = await generateImage({
-    prompt:
-      "A vast, oceanic world teeming with diverse islands, mythical creatures, powerful adventurers, and ancient mysteries, where freedom and ambition drive endless journeys and epic battles.",
-    aspectRatio: "1:1",
-  });
-  console.log("image", image);
+  (async () => {
+    const image = await generateImage({
+      prompt:
+        "A vast, oceanic world teeming with diverse islands, mythical creatures, powerful adventurers, and ancient mysteries, where freedom and ambition drive endless journeys and epic battles.",
+      aspectRatio: "1:1",
+    });
+    console.log("image", image);
+  })();
 }
-
