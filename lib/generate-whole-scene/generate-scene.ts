@@ -32,7 +32,16 @@ Key responsibilities:
 - Consider previous scenes to ensure narrative continuity
 - Incorporate described scene elements while allowing for organic story flow
 - Ignore the audioId field, as it's not relevant to your current task
-- The character name MUST be the character's displayName!`;
+- The character name MUST be the character's displayName!
+
+Scripting for emphasis:
+- If the word in the text should be emphasized when the character says it, you have two options:
+  - For a longer emphasis wrap it in quotes. For example, ("I" don't want to go "there"!)
+  - For a shorter higher pitch emphasis capitalize the word. For example, (I don't want to go THERE!)
+  - When emphasizing "I", just use quotes around the word. For example, ("I" don't want to go there!)
+- Use this liberally, assume the character would otherwise read it flat.
+
+`;
 
   const scenePrompt = `
 Story: ${JSON.stringify(story)}
