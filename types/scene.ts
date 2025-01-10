@@ -20,6 +20,7 @@ export const ScriptSchema = z.array(
     characterName: z.string(),
     text: z.string(),
     audioUrl: z.string().optional(),
+    emotion: z.string(),
   })
 );
 export type Script = z.infer<typeof ScriptSchema>;
@@ -41,18 +42,28 @@ export type Scene = z.infer<typeof SceneSchema>;
 
 // AI types:
 
-const ScriptWithoutAudioSchema = z.array(
-  z.object({
-    characterName: z.string(),
-    text: z.string(),
-  })
-);
+const ScriptWithoutAudioSchema = z
+  .array(
+    z.object({
+      characterName: z.string(),
+      text: z.string(),
+      emotion: z
+        .string()
+        .describe(
+          "Emotion of the character, as if said in a book after they spoke. For example: 'he said, angrily.'. This must include the 'he/she said' part."
+        ),
+    })
+  )
+  .describe(
+    "This is an array of objects. Make sure not to wrap the whole thing in quotes."
+  );
 
 export const SceneWithoutDBFieldsSchema = SceneSchema.omit({
   id: true,
   createdAt: true,
   order: true,
   backgroundImageUrl: true,
+  backgroundAudioUrl: true,
 }).extend({
   script: ScriptWithoutAudioSchema,
 });

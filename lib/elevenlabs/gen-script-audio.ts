@@ -14,7 +14,11 @@ export default async function genScriptAudio({
 }): Promise<string[]> {
   const promises = script.map(async (line) => {
     if (line.characterName === "Narrator") {
-      return genVoice({ voiceId: narratorVoiceId, text: line.text });
+      return genVoice({
+        voiceId: narratorVoiceId,
+        text: line.text,
+        emotion: line.emotion,
+      });
     } else {
       const thisCharacterId = characterIds[line.characterName];
       if (!thisCharacterId) {
@@ -28,7 +32,11 @@ export default async function genScriptAudio({
       if (!thisCharacter) {
         throw new Error(`Character not found for ID ${thisCharacterId}`);
       }
-      return genVoice({ voiceId: thisCharacter.voiceId, text: line.text });
+      return genVoice({
+        voiceId: thisCharacter.voiceId,
+        text: line.text,
+        emotion: line.emotion,
+      });
     }
   });
 

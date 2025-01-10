@@ -7,9 +7,11 @@ import { getVoiceRateLimiter } from "./rate-limiter";
 export default async function genVoice({
   voiceId,
   text,
+  emotion,
 }: {
   voiceId: string;
   text: string;
+  emotion: string;
 }) {
   const rateLimiter = getVoiceRateLimiter();
 
@@ -22,7 +24,10 @@ export default async function genVoice({
       model_id: "eleven_multilingual_v2",
       voice_settings: {
         stability: 0.3,
+        similarity_boost: 0.75,
+        use_speaker_boost: true,
       },
+      next_text: emotion,
     });
     await logger.info("Generated voice", { voiceId, text });
 
@@ -47,8 +52,9 @@ export default async function genVoice({
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   genVoice({
-    voiceId: "lqydY2xVUkg9cEIFmFMU",
+    voiceId: "lUCNYQh2kqW2wiie85Qk",
     text: "Hello, world! I am a goddamn minitaur!",
+    emotion: "they said with excitement.",
   }).then(console.log);
 }
 

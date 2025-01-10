@@ -15,7 +15,10 @@ const ImagePromptSchema = z.object({
 });
 
 export default async function genSceneImage(
-  scene: Omit<Scene, "id" | "createdAt" | "order" | "backgroundImageUrl">
+  scene: Omit<
+    Scene,
+    "id" | "createdAt" | "order" | "backgroundImageUrl" | "backgroundAudioUrl"
+  >
 ): Promise<string> {
   try {
     // Generate the image prompt using Claude
@@ -79,7 +82,7 @@ Description: ${scene.description}`,
 if (import.meta.url === `file://${process.argv[1]}`) {
   const testScene: Omit<
     Scene,
-    "id" | "createdAt" | "order" | "backgroundImageUrl"
+    "id" | "createdAt" | "order" | "backgroundImageUrl" | "backgroundAudioUrl"
   > = {
     storyId: 1,
     title: "The Harbor at Dawn",
@@ -93,10 +96,12 @@ if (import.meta.url === `file://${process.argv[1]}`) {
       {
         characterName: "captain",
         text: "Another beautiful morning on the water.",
+        emotion: "he said, with a smile.",
       },
       {
         characterName: "fisherman",
         text: "Aye, the tide's perfect today.",
+        emotion: "he replied, casting his net.",
       },
     ],
   };
