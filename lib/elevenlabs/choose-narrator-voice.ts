@@ -6,6 +6,7 @@ import { LibraryVoiceResponse } from "elevenlabs/api";
 import { logger } from "@/lib/logger";
 import { voiceOptions, voiceOptionsMap } from "./voice-options/voice-options";
 import _ from "lodash";
+import { EXCLUDED_VOICE_IDS } from "./voice-options/excluded-voices";
 
 const DEFAULT_MAX_RETRIES = 3;
 const BASE_DELAY = 1000;
@@ -41,7 +42,10 @@ function simplifyVoiceInfo(voice: LibraryVoiceResponse): VoiceSelectionInfo {
 }
 
 export async function chooseNarratorVoice(
-  story: Omit<Story, "id" | "createdAt" | "imageUrl" | "narratorVoiceId">,
+  story: Omit<
+    Story,
+    "id" | "createdAt" | "imageUrl" | "narratorVoiceId" | "usedVoiceIds"
+  >,
   maxRetries: number = DEFAULT_MAX_RETRIES
 ): Promise<string> {
   try {
@@ -49,7 +53,12 @@ export async function chooseNarratorVoice(
       throw new Error("No voices available for narration");
     }
 
-    const simplifiedVoices = voiceOptions.map(simplifyVoiceInfo);
+    // Filter out excluded voices
+    const filteredVoices = voiceOptions.filter(
+      (voice) => !EXCLUDED_VOICE_IDS.includes(voice.voice_id)
+    );
+
+    const simplifiedVoices = filteredVoices.map(simplifyVoiceInfo);
 
     // Shuffle the voices to prevent bias towards voices that appear first
     const shuffledSimplifiedVoices = _.shuffle(simplifiedVoices);
@@ -138,7 +147,10 @@ Choose a voice that will enhance the storytelling experience and match the story
 if (import.meta.url === `file://${process.argv[1]}`) {
   (async () => {
     try {
-      const testStory: Omit<Story, "id" | "createdAt" | "narratorVoiceId"> = {
+      const testStory: Omit<
+        Story,
+        "id" | "createdAt" | "narratorVoiceId" | "usedVoiceIds"
+      > = {
         title: "The Chronicles of the Lost Library",
         worldIdea:
           "A mysterious library that exists between dimensions, holding the knowledge of countless worlds.",

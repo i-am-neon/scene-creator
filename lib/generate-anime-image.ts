@@ -65,6 +65,7 @@ export default async function generateAnimeImage({
             prompt: currentPrompt,
             aspect_ratio: aspectRatio,
             output_quality: 100,
+            disable_safety_checker: true,
           },
         }
       )) as FileOutput[];

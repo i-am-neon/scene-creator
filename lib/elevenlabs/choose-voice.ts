@@ -5,6 +5,7 @@ import generateStructuredData from "@/lib/generate-structured-data";
 import { LibraryVoiceResponse } from "elevenlabs/api";
 import { logger } from "@/lib/logger";
 import { getVoicesByGender } from "./voice-options/voice-options";
+import { EXCLUDED_VOICE_IDS } from "./voice-options/excluded-voices";
 import _ from "lodash";
 
 interface VoiceSelectionInfo {
@@ -54,13 +55,16 @@ export async function chooseVoice({
   >;
   voiceOptions: LibraryVoiceResponse[];
 }): Promise<string> {
-  if (voiceOptions.length === 0) {
-    throw new Error(`No voices found for gender: ${character.gender}`);
+  // Filter out excluded voices
+  const filteredVoices = voiceOptions.filter(
+    (voice) => !EXCLUDED_VOICE_IDS.includes(voice.voice_id)
+  );
+
+  if (filteredVoices.length === 0) {
+    throw new Error(`No valid voices found for gender: ${character.gender}`);
   }
 
-  const simplifiedVoices = voiceOptions.map(simplifyVoiceInfo);
-
-  // Shuffle the voices to prevent bias towards voices that appear first
+  const simplifiedVoices = filteredVoices.map(simplifyVoiceInfo);
   const shuffledSimplifiedVoices = _.shuffle(simplifiedVoices);
 
   let lastError: Error | null = null;
@@ -95,7 +99,7 @@ ${JSON.stringify(shuffledSimplifiedVoices, null, 2)}`;
         temperature: 0.7,
       });
 
-      const selectedVoice = voiceOptions.find(
+      const selectedVoice = filteredVoices.find(
         (v) => v.voice_id === result.selectedVoiceId
       );
 
@@ -193,4 +197,3 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     }
   })();
 }
-

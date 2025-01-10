@@ -11,7 +11,7 @@ export default async function genVoice({
 }: {
   voiceId: string;
   text: string;
-  emotion: string;
+  emotion?: string;
 }) {
   const rateLimiter = getVoiceRateLimiter();
 
