@@ -4,7 +4,12 @@ import { Story } from "@/types/story";
 import generateStructuredData from "@/lib/generate-structured-data";
 import { LibraryVoiceResponse } from "elevenlabs/api";
 import { logger } from "@/lib/logger";
-import { voiceOptions } from "./voice-options/voice-options";
+import { voiceOptions, voiceOptionsMap } from "./voice-options/voice-options";
+
+const DEFAULT_MAX_RETRIES = 3;
+const BASE_DELAY = 1000;
+
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 // Only essential voice information for selection
 interface VoiceSelectionInfo {
@@ -35,7 +40,8 @@ function simplifyVoiceInfo(voice: LibraryVoiceResponse): VoiceSelectionInfo {
 }
 
 export async function chooseNarratorVoice(
-  story: Omit<Story, "id" | "createdAt" | "imageUrl" | "narratorVoiceId">
+  story: Omit<Story, "id" | "createdAt" | "imageUrl" | "narratorVoiceId">,
+  maxRetries: number = DEFAULT_MAX_RETRIES
 ): Promise<string> {
   try {
     if (voiceOptions.length === 0) {
@@ -43,8 +49,11 @@ export async function chooseNarratorVoice(
     }
 
     const simplifiedVoices = voiceOptions.map(simplifyVoiceInfo);
+    let lastError: Error | null = null;
 
-    const systemMessage = `You are a voice casting expert specializing in selecting narrators for storytelling.
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        const systemMessage = `You are a voice casting expert specializing in selecting narrators for storytelling.
 When choosing a narrative voice, consider:
 - The story's tone and theme
 - World setting and historical period
@@ -52,7 +61,7 @@ When choosing a narrative voice, consider:
 - Voice clarity and storytelling capability
 - Accent appropriateness for the story's setting`;
 
-    const prompt = `Choose the most appropriate narrator voice for this story:
+        const prompt = `Choose the most appropriate narrator voice for this story:
 ${JSON.stringify(story, null, 2)}
 
 Available voices:
@@ -60,32 +69,58 @@ ${JSON.stringify(simplifiedVoices, null, 2)}
 
 Choose a voice that will enhance the storytelling experience and match the story's tone and setting.`;
 
-    const result = await generateStructuredData({
-      callName: "chooseNarratorVoice",
-      schema: VoiceSelectionSchema,
-      systemMessage,
-      prompt,
-      temperature: 0.7,
-    });
+        const result = await generateStructuredData({
+          callName: "chooseNarratorVoice",
+          schema: VoiceSelectionSchema,
+          systemMessage,
+          prompt,
+          temperature: 0.7,
+        });
 
-    const selectedVoice = voiceOptions.find(
-      (v) => v.voice_id === result.selectedVoiceId
-    );
+        const selectedVoice = voiceOptionsMap[result.selectedVoiceId];
 
-    if (!selectedVoice) {
-      throw new Error(
-        `Selected voice ID ${result.selectedVoiceId} not found in available voices`
-      );
+        if (!selectedVoice) {
+          throw new Error(
+            `Selected voice ID ${result.selectedVoiceId} not found in available voices`
+          );
+        }
+
+        await logger.info("Narrator voice selected for story", {
+          storyTitle: story.title,
+          selectedVoiceId: selectedVoice.voice_id,
+          voiceName: selectedVoice.name,
+          reasoning: result.reasoning,
+          attempt: attempt + 1,
+        });
+
+        return selectedVoice.voice_id;
+      } catch (error) {
+        lastError = error as Error;
+        const errorMessage =
+          error instanceof Error
+            ? error.message
+            : "Unknown error occurred while selecting narrator voice";
+
+        if (attempt < maxRetries - 1) {
+          const delay = BASE_DELAY * Math.pow(2, attempt);
+          await logger.warn("Voice selection failed, retrying", {
+            error: errorMessage,
+            attempt: attempt + 1,
+            nextAttemptDelay: delay,
+            storyTitle: story.title,
+          });
+          await sleep(delay);
+          continue;
+        }
+
+        throw error;
+      }
     }
 
-    await logger.info("Narrator voice selected for story", {
-      storyTitle: story.title,
-      selectedVoiceId: selectedVoice.voice_id,
-      voiceName: selectedVoice.name,
-      reasoning: result.reasoning,
-    });
-
-    return selectedVoice.voice_id;
+    throw (
+      lastError ||
+      new Error(`Failed to select voice after ${maxRetries} attempts`)
+    );
   } catch (error) {
     await logger.error("Failed to choose narrator voice for story", {
       error: error instanceof Error ? error.stack : String(error),
@@ -121,13 +156,9 @@ if (import.meta.url === `file://${process.argv[1]}`) {
       };
 
       const selectedVoice = await chooseNarratorVoice(testStory);
-      console.log(
-        "Selected narrator voice:",
-        voiceOptions.find((v) => v.voice_id === selectedVoice)
-      );
+      console.log("Selected narrator voice:", voiceOptionsMap[selectedVoice]);
     } catch (error) {
       console.error("Error:", error);
     }
   })();
 }
-
