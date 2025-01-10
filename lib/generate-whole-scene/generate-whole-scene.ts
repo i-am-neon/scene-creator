@@ -10,7 +10,7 @@ import { updateJunctionTable } from "@/db/scene-character/update-junction-table"
 import { logger } from "../logger";
 import genSceneImage from "./gen-scene-image";
 import genScriptAudio from "../elevenlabs/gen-script-audio";
-import { addCharacterVoices as addCharacterVoicesToMyVoices } from "../elevenlabs/my-voices/add-character-voices-to-my-voices";
+import { addCharacterVoices } from "../elevenlabs/my-voices/add-character-voices-to-my-voices";
 import { deleteAllMyVoices } from "../elevenlabs/my-voices/delete-all-my-voices";
 import { generateSceneMusic } from "./gen-scene-music";
 
@@ -37,24 +37,27 @@ export default async function generateWholeScene({
 }: GenerateSceneParams): Promise<Scene> {
   await logger.info("Generating whole scene", { storyId: story.id });
 
-  // Add character voices so elevenlabs can use them
-  await addCharacterVoicesToMyVoices(existingCharacters);
+  // Phase 1: Add voices and generate ideas in parallel
+  const [, ideas] = await Promise.all([
+    addCharacterVoices(existingCharacters),
+    generateIdeas({ story, existingCharacters, previousScenes }),
+  ]);
 
-  const ideas = await generateIdeas({
-    story,
-    existingCharacters,
-    previousScenes,
-  });
   await logger.info("Generated scene ideas", { ideas });
 
-  const newCharacters = await generateBulkCharactersAndPortraits({
-    characterIdeas: ideas.newCharacterIdeas,
-    story,
-  });
+  // Phase 2: Generate characters and scene in parallel
+  const [newCharacters, existingCharactersInScene] = await Promise.all([
+    generateBulkCharactersAndPortraits({
+      characterIdeas: ideas.newCharacterIdeas,
+      story,
+    }),
+    Promise.resolve(
+      existingCharacters.filter((c) =>
+        ideas.existingCharacterIDsIncludedInScene.includes(c.id.toString())
+      )
+    ),
+  ]);
 
-  const existingCharactersInScene: Character[] = existingCharacters.filter(
-    (c) => ideas.existingCharacterIDsIncludedInScene.includes(c.id.toString())
-  );
   const charactersInScene = [...existingCharactersInScene, ...newCharacters];
 
   const generatedScene = await generateScene({
@@ -63,47 +66,53 @@ export default async function generateWholeScene({
     previousScenes,
     sceneIdea: ideas.sceneIdea,
   });
+
   await logger.info("Generated scene", { generatedScene });
 
-  const [orderedAudioUrls, backgroundImageUrl] = await Promise.all([
-    genScriptAudio({
-      script: generatedScene.script,
-      characterIds: charactersInScene.reduce(
-        (acc, c) => ({ ...acc, [c.displayName]: c.id }),
-        {}
-      ),
-      narratorVoiceId: story.narratorVoiceId,
-    }),
-    genSceneImage(generatedScene),
-  ]);
-  await logger.info("Generated audio for scene", { orderedAudioUrls });
+  // Phase 3: Generate all media in parallel
+  const [orderedAudioUrls, backgroundImageUrl, backgroundAudioUrl] =
+    await Promise.all([
+      genScriptAudio({
+        script: generatedScene.script,
+        characterIds: charactersInScene.reduce(
+          (acc, c) => ({ ...acc, [c.displayName]: c.id }),
+          {}
+        ),
+        narratorVoiceId: story.narratorVoiceId,
+      }),
+      genSceneImage(generatedScene),
+      generateSceneMusic({
+        sceneIdea: ideas,
+        duration: 15,
+      }),
+    ]);
 
+  await logger.info("Generated media for scene", {
+    audioCount: orderedAudioUrls.length,
+    hasBackgroundImage: !!backgroundImageUrl,
+    hasBackgroundAudio: !!backgroundAudioUrl,
+  });
+
+  // Phase 4: Insert scene and update junction table in parallel
   const scriptWithAudio = addAudioUrlsToScript(
     generatedScene.script,
     orderedAudioUrls
   );
-
-  const backgroundAudioUrl = await generateSceneMusic({
-    sceneIdea: ideas,
-    duration: 15,
-  });
-
-  const scene = await insertScene({
-    ...generatedScene,
-    script: scriptWithAudio,
-    order: previousScenes.length + 1,
-    backgroundImageUrl,
-    backgroundAudioUrl,
-  });
-  await logger.info("Inserted scene", { sceneId: scene.id });
+  const [scene] = await Promise.all([
+    insertScene({
+      ...generatedScene,
+      script: scriptWithAudio,
+      order: previousScenes.length + 1,
+      backgroundImageUrl,
+      backgroundAudioUrl,
+    }),
+    deleteAllMyVoices(),
+  ]);
 
   await updateJunctionTable({
     characterIds: charactersInScene.map((c) => c.id),
     sceneId: scene.id,
   });
-
-  // Delete all voices from "My Voices" after generating the scene - elevenlabs only allows 30.
-  await deleteAllMyVoices();
 
   return scene;
 }
@@ -117,4 +126,3 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     .then(console.log)
     .catch(console.error);
 }
-
