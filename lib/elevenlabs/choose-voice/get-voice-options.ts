@@ -25,6 +25,7 @@ export default async function getVoiceOptions({
       searchStrings = ["male", "female", "neutral"];
   }
   console.log("allVoices.length :>> ", allVoices.length);
+  console.log("allVoices[0] :>> ", allVoices[0]);
   const filteredVoices = allVoices.filter((voice) => {
     const voiceGender = voice?.gender;
     if (!voiceGender) {

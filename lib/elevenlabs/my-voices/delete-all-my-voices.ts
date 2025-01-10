@@ -1,12 +1,12 @@
 // "My Voices" is the pool of voices Elevenlabs allows you to use. You can delete all of them with this script.
 
-import { logger } from "../logger";
-import elevenlabs from "./init-eleven-labs";
+import { logger } from "../../logger";
+import elevenlabs from "../init-eleven-labs";
 
 export async function deleteAllVoices(): Promise<void> {
   try {
     // Get all voices
-    const { voices } = await elevenlabs.voices.getAll();
+    const { voices } = await elevenlabs.voices.getShared();
 
     // Delete each voice
     const deletionPromises = voices.map(async (voice) => {
@@ -49,3 +49,4 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     }
   })();
 }
+
