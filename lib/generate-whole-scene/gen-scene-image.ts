@@ -1,6 +1,6 @@
 import { z } from "zod";
 import generateStructuredData from "@/lib/generate-structured-data";
-import generateImage from "@/lib/generate-image";
+import generateFluxProImage from "@/lib/generate-flux-pro-image";
 import { Scene } from "@/types/scene";
 import { logger } from "@/lib/logger";
 import saveImage from "@/db/save-image";
@@ -46,7 +46,7 @@ Description: ${scene.description}`,
     });
 
     // Generate the image using the prompt
-    const imageUrl = await generateImage({
+    const imageUrl = await generateFluxProImage({
       prompt,
       aspectRatio: "16:9", // Widescreen aspect ratio suitable for scene backgrounds
     });

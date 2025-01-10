@@ -25,7 +25,7 @@ const replicate = new Replicate({
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-export default async function generateImage({
+export default async function generateFluxProImage({
   prompt,
   aspectRatio,
   maxRetries = DEFAULT_MAX_RETRIES,
@@ -126,7 +126,7 @@ export default async function generateImage({
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   (async () => {
-    const image = await generateImage({
+    const image = await generateFluxProImage({
       prompt:
         "A vast, oceanic world teeming with diverse islands, mythical creatures, powerful adventurers, and ancient mysteries, where freedom and ambition drive endless journeys and epic battles.",
       aspectRatio: "1:1",

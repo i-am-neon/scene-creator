@@ -3,7 +3,7 @@ import { Story } from "@/types/story";
 import { v4 as uuidv4 } from "uuid";
 import { chooseNarratorVoice } from "../elevenlabs/choose-narrator-voice";
 import { deleteAllMyVoices } from "../elevenlabs/my-voices/delete-all-my-voices";
-import generateImage from "../generate-image";
+import generateFluxProImage from "../generate-flux-pro-image";
 import generateStoryData from "./generate-story-data";
 
 export default async function generateStory(
@@ -11,7 +11,7 @@ export default async function generateStory(
 ): Promise<Omit<Story, "id" | "createdAt">> {
   const [story, imageUrl] = await Promise.all([
     generateStoryData(worldIdea),
-    generateImage({
+    generateFluxProImage({
       aspectRatio: "16:9",
       prompt: worldIdea,
     }),

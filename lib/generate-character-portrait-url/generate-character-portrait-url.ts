@@ -1,7 +1,7 @@
 import saveImage from "@/db/save-image";
 import { CharacterPreSave } from "@/types/character";
 import { v4 as uuidv4 } from "uuid";
-import generateImage from "../generate-image";
+import generateFluxProImage from "../generate-flux-pro-image";
 import { generateCharacterImagePrompt } from "./gen-character-image-prompt";
 import removeImageBackground from "../remove-image-background";
 
@@ -9,7 +9,7 @@ export default async function generateCharacterPortraitUrl(
   character: CharacterPreSave
 ): Promise<string> {
   const prompt = await generateCharacterImagePrompt(character);
-  const imageUrl = await generateImage({
+  const imageUrl = await generateFluxProImage({
     aspectRatio: "2:3",
     prompt,
   });
