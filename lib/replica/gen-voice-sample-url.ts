@@ -2,7 +2,7 @@ import generateStructuredData from "@/lib/generate-structured-data";
 import { CharacterPreSave } from "@/types/character";
 import { z } from "zod";
 import { requestTextToSpeech } from "./request-text-to-speech";
-import saveReplicaAudio from "@/db/save-replica-audio";
+import saveAudioUrl from "@/db/save-audio-url";
 import { fetchVoice } from "./fetch-voice";
 
 const VoiceSampleSchema = z.object({
@@ -44,6 +44,6 @@ export async function generateVoiceSampleUrl({
     speaker_id: voice.defaultStyle.speakerId,
     text,
   });
-  return saveReplicaAudio({ url });
+  return saveAudioUrl({ url });
 }
 

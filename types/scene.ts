@@ -34,6 +34,7 @@ export const SceneSchema = z.object({
   characterPositions: CharacterPositionMapSchema,
   script: ScriptSchema,
   backgroundImageUrl: z.string(),
+  backgroundAudioUrl: z.string(),
 });
 
 export type Scene = z.infer<typeof SceneSchema>;

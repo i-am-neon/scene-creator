@@ -106,6 +106,7 @@ export type Database = {
       }
       scenes: {
         Row: {
+          background_audio_url: string
           background_image_url: string
           character_positions: Json
           created_at: string
@@ -117,6 +118,7 @@ export type Database = {
           title: string
         }
         Insert: {
+          background_audio_url: string
           background_image_url: string
           character_positions: Json
           created_at?: string
@@ -128,6 +130,7 @@ export type Database = {
           title: string
         }
         Update: {
+          background_audio_url?: string
           background_image_url?: string
           character_positions?: Json
           created_at?: string

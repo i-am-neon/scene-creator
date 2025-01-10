@@ -1,4 +1,4 @@
-import saveElevenLabsAudio from "@/db/save-elevenlabs-audio";
+import saveAudioStream from "@/db/save-audio-stream";
 import { logger } from "../logger";
 import { ElevenLabsError, formatElevenLabsError } from "./elevenlabs-error";
 import elevenlabs from "./init-eleven-labs";
@@ -23,7 +23,7 @@ export default async function genVoice({
     });
     await logger.info("Generated voice", { voiceId, text });
 
-    return await saveElevenLabsAudio({
+    return await saveAudioStream({
       stream: audio,
     });
   } catch (error) {
