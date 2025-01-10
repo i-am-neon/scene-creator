@@ -27,7 +27,7 @@ const positionToClassName: Record<keyof CharacterPositionMap, string> = {
   "far-right": "right-0",
 };
 
-const FADE_DURATION = 2; // seconds
+const FADE_DURATION = 0; // seconds
 const MAX_MUSIC_VOLUME = 0.15;
 
 const ScenePlayer: React.FC<ScenePlayerProps> = ({ scene, characters }) => {
@@ -108,6 +108,9 @@ const ScenePlayer: React.FC<ScenePlayerProps> = ({ scene, characters }) => {
         } else {
           setIsPlaying(false);
           setShouldContinuePlayback(false);
+          if (bgMusicRef.current) {
+            bgMusicRef.current.pause();
+          }
         }
       });
 
