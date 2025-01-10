@@ -1,15 +1,48 @@
 "use server";
-
 import { insertCharacter } from "@/db/character/insert-character";
 import { generateCharacter } from "@/lib/generate-character";
 import generateCharacterPortraitUrl from "@/lib/generate-character-portrait-url/generate-character-portrait-url";
 import { Character } from "@/types/character";
 import { CharacterIdea } from "@/types/character-idea";
 import { Story } from "@/types/story";
-import { TEST_STORY } from "./generate-whole-scene/test-data";
-import { logger } from "./logger";
 import { chooseVoice } from "./elevenlabs/choose-voice";
 import { generateVoiceSampleUrl } from "./elevenlabs/gen-voice-sample-url";
+import { TEST_STORY } from "./generate-whole-scene/test-data";
+import { logger } from "./logger";
+
+async function generateSingleCharacter(
+  characterIdea: CharacterIdea,
+  story: Story
+): Promise<Character> {
+  const character = await generateCharacter({ characterIdea, story });
+  await logger.info("Generated character", { character });
+
+  // Run portrait, voice, and sample generation in parallel
+  const [portraitUrl, voiceId] = await Promise.all([
+    generateCharacterPortraitUrl(character),
+    chooseVoice(character),
+  ]);
+
+  await Promise.all([
+    logger.info(`Generated portrait for "${character.displayName}"`, {
+      portraitUrl,
+    }),
+    logger.info(`Chose voice for "${character.displayName}"`, { voiceId }),
+  ]);
+
+  const voiceSampleUrl = await generateVoiceSampleUrl({ character, voiceId });
+  await logger.info(`Generated voice sample for "${character.displayName}"`, {
+    voiceSampleUrl,
+  });
+
+  return insertCharacter({
+    ...character,
+    portraitUrl,
+    storyId: story.id,
+    voiceId,
+    voiceSampleUrl,
+  });
+}
 
 export default async function generateBulkCharactersAndPortraits({
   characterIdeas,
@@ -19,37 +52,11 @@ export default async function generateBulkCharactersAndPortraits({
   story: Story;
 }): Promise<Character[]> {
   await logger.info("Generating characters and portraits");
-  const characterPromises = characterIdeas.map(async (characterIdea) => {
-    const character = await generateCharacter({
-      characterIdea,
-      story,
-    });
-    await logger.info("Generated character", { character });
-    const portraitUrl = await generateCharacterPortraitUrl(character);
-    await logger.info(`Generated portrait for "${character.displayName}"`, {
-      portraitUrl,
-    });
-
-    const voiceId = await chooseVoice(character);
-    await logger.info(`Chose voice for "${character.displayName}"`, {
-      voiceId,
-    });
-
-    const voiceSampleUrl = await generateVoiceSampleUrl({ character, voiceId });
-    await logger.info(`Generated voice sample for "${character.displayName}"`, {
-      voiceSampleUrl,
-    });
-
-    return await insertCharacter({
-      ...character,
-      portraitUrl,
-      storyId: story.id,
-      voiceId,
-      voiceSampleUrl,
-    });
-  });
-
-  return Promise.all(characterPromises);
+  return Promise.all(
+    characterIdeas.map((characterIdea) =>
+      generateSingleCharacter(characterIdea, story)
+    )
+  );
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
@@ -64,4 +71,3 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     ],
   });
 }
-
