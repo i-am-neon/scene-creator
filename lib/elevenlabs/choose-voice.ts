@@ -4,7 +4,7 @@ import { Character } from "@/types/character";
 import generateStructuredData from "@/lib/generate-structured-data";
 import { LibraryVoiceResponse } from "elevenlabs/api";
 import { logger } from "@/lib/logger";
-import { getVoicesByGender } from "../voice-options/voice-options";
+import { getVoicesByGender } from "./voice-options/voice-options";
 
 const VoiceSelectionSchema = z.object({
   selectedVoiceId: z.string(),
@@ -123,3 +123,4 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     }
   })();
 }
+
