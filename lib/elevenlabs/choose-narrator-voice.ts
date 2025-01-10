@@ -5,6 +5,7 @@ import generateStructuredData from "@/lib/generate-structured-data";
 import { LibraryVoiceResponse } from "elevenlabs/api";
 import { logger } from "@/lib/logger";
 import { voiceOptions, voiceOptionsMap } from "./voice-options/voice-options";
+import _ from "lodash";
 
 const DEFAULT_MAX_RETRIES = 3;
 const BASE_DELAY = 1000;
@@ -49,6 +50,10 @@ export async function chooseNarratorVoice(
     }
 
     const simplifiedVoices = voiceOptions.map(simplifyVoiceInfo);
+
+    // Shuffle the voices to prevent bias towards voices that appear first
+    const shuffledSimplifiedVoices = _.shuffle(simplifiedVoices);
+
     let lastError: Error | null = null;
 
     for (let attempt = 0; attempt < maxRetries; attempt++) {
@@ -65,7 +70,7 @@ When choosing a narrative voice, consider:
 ${JSON.stringify(story, null, 2)}
 
 Available voices:
-${JSON.stringify(simplifiedVoices, null, 2)}
+${JSON.stringify(shuffledSimplifiedVoices, null, 2)}
 
 Choose a voice that will enhance the storytelling experience and match the story's tone and setting.`;
 
@@ -162,3 +167,4 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     }
   })();
 }
+

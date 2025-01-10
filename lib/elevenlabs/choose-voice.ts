@@ -5,6 +5,7 @@ import generateStructuredData from "@/lib/generate-structured-data";
 import { LibraryVoiceResponse } from "elevenlabs/api";
 import { logger } from "@/lib/logger";
 import { getVoicesByGender } from "./voice-options/voice-options";
+import _ from "lodash";
 
 interface VoiceSelectionInfo {
   voice_id: string;
@@ -56,6 +57,10 @@ export async function chooseVoice(
   }
 
   const simplifiedVoices = availableVoices.map(simplifyVoiceInfo);
+
+  // Shuffle the voices to prevent bias towards voices that appear first
+  const shuffledSimplifiedVoices = _.shuffle(simplifiedVoices);
+
   let lastError: Error | null = null;
 
   for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
@@ -78,7 +83,7 @@ Important:
 ${JSON.stringify(character, null, 2)}
 
 Available voices (SELECT USING voice_id ONLY):
-${JSON.stringify(simplifiedVoices, null, 2)}`;
+${JSON.stringify(shuffledSimplifiedVoices, null, 2)}`;
 
       const result = await generateStructuredData({
         callName: "chooseVoice",
@@ -183,3 +188,4 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     }
   })();
 }
+
