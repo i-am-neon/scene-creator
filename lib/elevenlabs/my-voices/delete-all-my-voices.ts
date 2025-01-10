@@ -16,6 +16,7 @@ export async function deleteAllMyVoices(): Promise<void> {
           voiceId: voice.voice_id,
           voiceName: voice.name,
         });
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (_) {}
     });
 
