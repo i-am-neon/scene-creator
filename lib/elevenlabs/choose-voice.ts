@@ -35,8 +35,16 @@ function simplifyVoiceInfo(voice: LibraryVoiceResponse): VoiceSelectionInfo {
 }
 
 export async function chooseVoice(
-  character: Character
-): Promise<LibraryVoiceResponse> {
+  character: Omit<
+    Character,
+    | "id"
+    | "createdAt"
+    | "storyId"
+    | "portraitUrl"
+    | "voiceId"
+    | "voiceSampleUrl"
+  >
+): Promise<string> {
   try {
     const availableVoices = getVoicesByGender(character.gender);
 
@@ -80,18 +88,16 @@ Choose the voice that best matches the character's personality, age, and backgro
     }
 
     await logger.info("Voice selected for character", {
-      characterId: character.id,
       characterName: character.displayName,
       selectedVoiceId: selectedVoice.voice_id,
       voiceName: selectedVoice.name,
       reasoning: result.reasoning,
     });
 
-    return selectedVoice;
+    return selectedVoice.voice_id;
   } catch (error) {
     await logger.error("Failed to choose voice for character", {
       error: error instanceof Error ? error.stack : String(error),
-      characterId: character.id,
       characterName: character.displayName,
     });
     throw error;
