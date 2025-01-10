@@ -7,7 +7,7 @@ interface AddSharedVoiceParams {
   newName: string;
 }
 
-export async function addSharedVoice({
+export async function addVoiceToMyVoices({
   publicUserId,
   voiceId,
   newName,
@@ -44,7 +44,7 @@ export async function addSharedVoice({
 if (import.meta.url === `file://${process.argv[1]}`) {
   (async () => {
     try {
-      const newVoiceId = await addSharedVoice({
+      const newVoiceId = await addVoiceToMyVoices({
         publicUserId:
           "f87f057c2250691953ac2e6227859706764bd08c88a055a18c74261957885a51",
         voiceId: "tSVwqkJGEKjLklhiN0Nx",
