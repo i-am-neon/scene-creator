@@ -12,6 +12,7 @@ import genSceneImage from "./gen-scene-image";
 import genScriptAudio from "../elevenlabs/gen-script-audio";
 import { addCharacterVoices as addCharacterVoicesToMyVoices } from "../elevenlabs/my-voices/add-character-voices-to-my-voices";
 import { deleteAllMyVoices } from "../elevenlabs/my-voices/delete-all-my-voices";
+import { generateSceneMusic } from "./gen-scene-music";
 
 interface GenerateSceneParams {
   story: Story;
@@ -82,11 +83,17 @@ export default async function generateWholeScene({
     orderedAudioUrls
   );
 
+  const backgroundAudioUrl = await generateSceneMusic({
+    sceneIdea: ideas,
+    duration: 15,
+  });
+
   const scene = await insertScene({
     ...generatedScene,
     script: scriptWithAudio,
     order: previousScenes.length + 1,
     backgroundImageUrl,
+    backgroundAudioUrl,
   });
   await logger.info("Inserted scene", { sceneId: scene.id });
 
