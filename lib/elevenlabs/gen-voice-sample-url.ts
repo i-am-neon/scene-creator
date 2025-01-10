@@ -4,7 +4,6 @@ import { z } from "zod";
 import genVoice from "./gen-voice";
 import { addVoiceToMyVoices } from "./my-voices/add-voice-to-my-voices";
 import { voiceOptionsMap } from "./voice-options/voice-options";
-import { deleteVoiceFromMyVoices } from "./my-voices/delete-voice-from-my-voices";
 
 const VoiceSampleSchema = z.object({
   text: z
@@ -45,10 +44,6 @@ export async function generateVoiceSampleUrl({
     newName: character.displayName,
   });
 
-  const voiceUrl = await genVoice({ voiceId, text });
-
-  await deleteVoiceFromMyVoices(voiceId);
-
-  return voiceUrl;
+  return genVoice({ voiceId, text });
 }
 
