@@ -3,7 +3,7 @@ import { Story } from "@/types/story";
 import { v4 as uuidv4 } from "uuid";
 import generateImage from "../generate-image";
 import generateStoryData from "./generate-story-data";
-import chooseNarratorVoice from "../replica/choose-narrator-voice";
+import { chooseNarratorVoice } from "../elevenlabs/choose-narrator-voice";
 
 export default async function generateStory(
   worldIdea: string

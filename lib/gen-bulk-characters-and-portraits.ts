@@ -8,8 +8,8 @@ import { CharacterIdea } from "@/types/character-idea";
 import { Story } from "@/types/story";
 import { TEST_STORY } from "./generate-whole-scene/test-data";
 import { logger } from "./logger";
-import { generateVoiceSampleUrl } from "./replica/gen-voice-sample-url";
-import chooseVoice from "./replica/choose-voice";
+import { chooseVoice } from "./elevenlabs/choose-voice";
+import { generateVoiceSampleUrl } from "./elevenlabs/gen-voice-sample-url";
 
 export default async function generateBulkCharactersAndPortraits({
   characterIdeas,

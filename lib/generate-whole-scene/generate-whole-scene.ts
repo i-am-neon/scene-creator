@@ -9,7 +9,7 @@ import { insertScene } from "@/db/scene/insert-scene";
 import { updateJunctionTable } from "@/db/scene-character/update-junction-table";
 import { logger } from "../logger";
 import genSceneImage from "./gen-scene-image";
-import genScriptAudio from "../replica/gen-script-audio";
+import genScriptAudio from "../elevenlabs/gen-script-audio";
 
 interface GenerateSceneParams {
   story: Story;
