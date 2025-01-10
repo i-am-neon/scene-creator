@@ -4,6 +4,7 @@ import { readCharacter } from "@/db/character/read-character";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import MyAudioPlayer from "./components/audio-player";
+import RegenerateImageButton from "./components/regenerate-image-button";
 
 export default async function CharacterPage({
   params,
@@ -29,6 +30,7 @@ export default async function CharacterPage({
               priority
             />
           </div>
+          <RegenerateImageButton characterId={character.id} />
           {character.voiceSampleUrl && (
             <MyAudioPlayer url={character.voiceSampleUrl} />
           )}

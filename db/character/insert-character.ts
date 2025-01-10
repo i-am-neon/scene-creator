@@ -37,6 +37,26 @@ if (import.meta.url === `file://${process.argv[1]}`) {
       backstory: "A rogue with a mysterious past",
       storyId: 5, // Replace with a valid story ID
       relationships: ["Rogue's Guild", "Mysterious Stranger"],
+      physicalDescription: {
+        hairStyle:
+          "Long, silky hair usually kept neatly braided or tied back for archive work",
+        hairColor: "Deep chestnut brown with natural copper highlights",
+        eyeColor: "Striking sapphire blue with subtle flecks of silver",
+        skinTone: "Fair complexion with a slight indoor pallor",
+        build: "Slender and graceful, average height with delicate features",
+        facialFeatures:
+          "Heart-shaped face with high cheekbones and delicate jawline",
+        clothing:
+          "Modest archive worker robes in muted browns and grays, simple cut with practical pockets and ink-resistant sleeves",
+        accessories:
+          "Reading glasses, leather document satchel, concealed crystal pendant, writing implements",
+        distinctiveFeatures:
+          "Barely visible magical sigils on her palms that shimmer faintly when she's emotional",
+        expression:
+          "Carefully neutral and studious, but with an observant intensity in her eyes",
+      },
+      voiceId: "1",
+      voiceSampleUrl: "https://example.com/voice-sample.mp3",
     };
 
     const characterId = await insertCharacter(newCharacter);
