@@ -159,6 +159,7 @@ export type Database = {
           narrator_voice_id: string
           story_overview: Json
           title: string
+          used_voice_ids: string[]
           world_idea: string
           world_overview: Json
         }
@@ -169,6 +170,7 @@ export type Database = {
           narrator_voice_id: string
           story_overview: Json
           title: string
+          used_voice_ids: string[]
           world_idea: string
           world_overview: Json
         }
@@ -179,6 +181,7 @@ export type Database = {
           narrator_voice_id?: string
           story_overview?: Json
           title?: string
+          used_voice_ids?: string[]
           world_idea?: string
           world_overview?: Json
         }

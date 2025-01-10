@@ -12,6 +12,7 @@ export const toAppStory = (supabaseStory: SupabaseStory): Story => ({
   worldIdea: supabaseStory.world_idea,
   worldOverview: supabaseStory.world_overview as WorldOverview,
   storyOverview: supabaseStory.story_overview as StoryOverview,
+  usedVoiceIds: supabaseStory.used_voice_ids,
 });
 
 export const toSupabaseStory = (
@@ -23,5 +24,6 @@ export const toSupabaseStory = (
   world_idea: story.worldIdea,
   world_overview: story.worldOverview,
   story_overview: story.storyOverview,
+  used_voice_ids: story.usedVoiceIds,
 });
 

@@ -28,6 +28,7 @@ export const StorySchema = z.object({
   narratorVoiceId: z.string(),
   worldOverview: WorldOverviewSchema,
   storyOverview: StoryOverviewSchema,
+  usedVoiceIds: z.array(z.string()),
 });
 
 export type Story = z.infer<typeof StorySchema>;

@@ -39,7 +39,10 @@ function simplifyVoiceInfo(voice: LibraryVoiceResponse): VoiceSelectionInfo {
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-export async function chooseVoice(
+export async function chooseVoice({
+  character,
+  voiceOptions,
+}: {
   character: Omit<
     Character,
     | "id"
@@ -48,15 +51,14 @@ export async function chooseVoice(
     | "portraitUrl"
     | "voiceId"
     | "voiceSampleUrl"
-  >
-): Promise<string> {
-  const availableVoices = getVoicesByGender(character.gender);
-
-  if (availableVoices.length === 0) {
+  >;
+  voiceOptions: LibraryVoiceResponse[];
+}): Promise<string> {
+  if (voiceOptions.length === 0) {
     throw new Error(`No voices found for gender: ${character.gender}`);
   }
 
-  const simplifiedVoices = availableVoices.map(simplifyVoiceInfo);
+  const simplifiedVoices = voiceOptions.map(simplifyVoiceInfo);
 
   // Shuffle the voices to prevent bias towards voices that appear first
   const shuffledSimplifiedVoices = _.shuffle(simplifiedVoices);
@@ -93,7 +95,7 @@ ${JSON.stringify(shuffledSimplifiedVoices, null, 2)}`;
         temperature: 0.7,
       });
 
-      const selectedVoice = availableVoices.find(
+      const selectedVoice = voiceOptions.find(
         (v) => v.voice_id === result.selectedVoiceId
       );
 
@@ -181,7 +183,10 @@ if (import.meta.url === `file://${process.argv[1]}`) {
         },
       };
 
-      const selectedVoice = await chooseVoice(testCharacter);
+      const selectedVoice = await chooseVoice({
+        character: testCharacter,
+        voiceOptions: getVoicesByGender("female"),
+      });
       console.log("Selected voice:", selectedVoice);
     } catch (error) {
       console.error("Error:", error);

@@ -1,5 +1,6 @@
 "use server";
 import { insertCharacter } from "@/db/character/insert-character";
+import updateStory from "@/db/story/update-story";
 import { generateCharacter } from "@/lib/generate-character";
 import generateCharacterPortraitUrl from "@/lib/generate-character-portrait-url/generate-character-portrait-url";
 import { Character } from "@/types/character";
@@ -7,6 +8,7 @@ import { CharacterIdea } from "@/types/character-idea";
 import { Story } from "@/types/story";
 import { chooseVoice } from "./elevenlabs/choose-voice";
 import { generateVoiceSampleUrl } from "./elevenlabs/gen-voice-sample-url";
+import { getVoicesByGender } from "./elevenlabs/voice-options/voice-options";
 import { TEST_STORY } from "./generate-whole-scene/test-data";
 import { logger } from "./logger";
 
@@ -17,18 +19,22 @@ async function generateSingleCharacter(
   const character = await generateCharacter({ characterIdea, story });
   await logger.info("Generated character", { character });
 
-  // Run portrait, voice, and sample generation in parallel
-  const [portraitUrl, voiceId] = await Promise.all([
-    generateCharacterPortraitUrl(character),
-    chooseVoice(character),
-  ]);
+  const portraitUrl = await generateCharacterPortraitUrl(character);
+  await logger.info(`Generated portrait for "${character.displayName}"`, {
+    portraitUrl,
+  });
 
-  await Promise.all([
-    logger.info(`Generated portrait for "${character.displayName}"`, {
-      portraitUrl,
-    }),
-    logger.info(`Chose voice for "${character.displayName}"`, { voiceId }),
-  ]);
+  const unusedVoices = Object.values(
+    getVoicesByGender(character.gender)
+  ).filter((voice) => !new Set(story.usedVoiceIds ?? []).has(voice.voice_id));
+  const voiceId = await chooseVoice({
+    character,
+    voiceOptions: unusedVoices,
+  });
+  await updateStory(story.id, {
+    usedVoiceIds: [...(story.usedVoiceIds ?? []), voiceId],
+  });
+  await logger.info(`Chose voice for "${character.displayName}"`, { voiceId });
 
   const voiceSampleUrl = await generateVoiceSampleUrl({ character, voiceId });
   await logger.info(`Generated voice sample for "${character.displayName}"`, {
@@ -52,11 +58,13 @@ export default async function generateBulkCharactersAndPortraits({
   story: Story;
 }): Promise<Character[]> {
   await logger.info("Generating characters and portraits");
-  return Promise.all(
-    characterIdeas.map((characterIdea) =>
-      generateSingleCharacter(characterIdea, story)
-    )
-  );
+
+  const characters: Character[] = [];
+  for (const characterIdea of characterIdeas) {
+    const character = await generateSingleCharacter(characterIdea, story);
+    characters.push(character);
+  }
+  return characters;
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
@@ -71,3 +79,4 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     ],
   });
 }
+

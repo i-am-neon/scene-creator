@@ -34,6 +34,7 @@ export const TEST_STORY: Story = {
       },
     ],
   },
+  usedVoiceIds: [],
 };
 
 export const TEST_ELENA: Character = {

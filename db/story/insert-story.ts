@@ -1,6 +1,7 @@
 import { supabase } from "@/db/lib/init-supabase";
 import { Story } from "@/types/story";
 import { toSupabaseStory, toAppStory } from "./story-db-conversion";
+import { TEST_STORY } from "@/lib/generate-whole-scene/test-data";
 
 export default async function insertStory(
   story: Omit<Story, "id" | "createdAt">
@@ -18,3 +19,13 @@ export default async function insertStory(
   return toAppStory(data[0]);
 }
 
+if (import.meta.url === `file://${process.argv[1]}`) {
+  (async () => {
+    try {
+      const newStory = await insertStory(TEST_STORY);
+      console.log("Inserted story:", newStory);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  })();
+}
