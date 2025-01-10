@@ -3,7 +3,7 @@
 import { logger } from "../../logger";
 import elevenlabs from "../init-eleven-labs";
 
-export async function deleteAllVoices(): Promise<void> {
+export async function deleteAllMyVoices(): Promise<void> {
   try {
     // Get all voices
     const { voices } = await elevenlabs.voices.getShared();
@@ -42,7 +42,7 @@ export async function deleteAllVoices(): Promise<void> {
 if (import.meta.url === `file://${process.argv[1]}`) {
   (async () => {
     try {
-      await deleteAllVoices();
+      await deleteAllMyVoices();
       console.log("Successfully deleted all voices");
     } catch (error) {
       console.error("Error deleting voices:", error);

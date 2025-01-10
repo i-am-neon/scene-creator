@@ -2,6 +2,9 @@ import generateStructuredData from "@/lib/generate-structured-data";
 import { CharacterPreSave } from "@/types/character";
 import { z } from "zod";
 import genVoice from "./gen-voice";
+import { addVoiceToMyVoices } from "./my-voices/add-voice-to-my-voices";
+import { voiceOptionsMap } from "./voice-options/voice-options";
+import { deleteVoiceFromMyVoices } from "./my-voices/delete-voice-from-my-voices";
 
 const VoiceSampleSchema = z.object({
   text: z
@@ -36,6 +39,16 @@ export async function generateVoiceSampleUrl({
     temperature: 0.7,
   });
 
-  return genVoice({ voiceId, text });
+  await addVoiceToMyVoices({
+    publicUserId: voiceOptionsMap[voiceId].public_owner_id,
+    voiceId,
+    newName: character.displayName,
+  });
+
+  const voiceUrl = await genVoice({ voiceId, text });
+
+  await deleteVoiceFromMyVoices(voiceId);
+
+  return voiceUrl;
 }
 

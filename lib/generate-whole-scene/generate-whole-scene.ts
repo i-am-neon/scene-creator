@@ -10,6 +10,8 @@ import { updateJunctionTable } from "@/db/scene-character/update-junction-table"
 import { logger } from "../logger";
 import genSceneImage from "./gen-scene-image";
 import genScriptAudio from "../elevenlabs/gen-script-audio";
+import { addCharacterVoices as addCharacterVoicesToMyVoices } from "../elevenlabs/my-voices/add-character-voices-to-my-voices";
+import { deleteAllMyVoices } from "../elevenlabs/my-voices/delete-all-my-voices";
 
 interface GenerateSceneParams {
   story: Story;
@@ -33,6 +35,9 @@ export default async function generateWholeScene({
   previousScenes,
 }: GenerateSceneParams): Promise<Scene> {
   await logger.info("Generating whole scene", { storyId: story.id });
+
+  // Add character voices so elevenlabs can use them
+  await addCharacterVoicesToMyVoices(existingCharacters);
 
   const ideas = await generateIdeas({
     story,
@@ -89,6 +94,9 @@ export default async function generateWholeScene({
     characterIds: charactersInScene.map((c) => c.id),
     sceneId: scene.id,
   });
+
+  // Delete all voices from "My Voices" after generating the scene - elevenlabs only allows 30.
+  await deleteAllMyVoices();
 
   return scene;
 }
