@@ -3,6 +3,9 @@ import elevenlabs from "./init-eleven-labs";
 import { getVoiceRateLimiter } from "./rate-limiter";
 import { ElevenLabsError, formatElevenLabsError } from "./elevenlabs-error";
 import { logger } from "../logger";
+import { voiceOptions } from "./voice-options/voice-options";
+import { addVoiceToMyVoices } from "./my-voices/add-voice-to-my-voices";
+import { deleteVoiceFromMyVoices } from "./my-voices/delete-voice-from-my-voices";
 
 export default async function genVoice({
   voiceId,
@@ -14,6 +17,17 @@ export default async function genVoice({
   const rateLimiter = getVoiceRateLimiter();
 
   try {
+    // First add the voice to My Voices
+    const voice = voiceOptions.find((v) => v.voice_id === voiceId);
+    if (!voice) {
+      throw new Error(`Voice not found for ID ${voiceId}`);
+    }
+    await addVoiceToMyVoices({
+      publicUserId: voice.public_owner_id,
+      voiceId,
+      newName: voice.name,
+    });
+
     await logger.info("Waiting for rate limiter slot", { voiceId, text });
     await rateLimiter.acquire();
 
@@ -41,12 +55,14 @@ export default async function genVoice({
     throw elevenlabsError;
   } finally {
     rateLimiter.release();
+    // Remove the voice from My Voices
+    await deleteVoiceFromMyVoices(voiceId);
   }
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   genVoice({
-    voiceId: "rm6bQBXZFIjAZKKIhbhm",
+    voiceId: "lqydY2xVUkg9cEIFmFMU",
     text: "Hello, world! I am a goddamn minitaur!",
   }).then(console.log);
 }
