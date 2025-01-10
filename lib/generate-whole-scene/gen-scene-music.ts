@@ -8,8 +8,17 @@ const MusicPromptSchema = z.object({
   genre: z.string(),
   mood: z.string(),
   tempo: z.string(),
-  instruments: z.string(),
+  instruments: z
+    .string()
+    .describe(
+      "Instrumental elements only, no vocals except for ambient/atmospheric vocal elements"
+    ),
   structure: z.string(),
+  dynamics: z
+    .string()
+    .describe(
+      "Volume and intensity levels appropriate for background music during dialogue"
+    ),
 });
 
 export async function generateSceneMusic({
@@ -23,18 +32,20 @@ export async function generateSceneMusic({
     const promptData = await generateStructuredData({
       callName: "generateSceneMusicPrompt",
       schema: MusicPromptSchema,
-      systemMessage: `You are a master music composer who specializes in creating evocative musical scores for scenes. 
-      Analyze scene descriptions and generate appropriate musical accompaniment prompts.
-      Focus on enhancing the emotional impact and narrative weight of the scene.`,
-      prompt: `Create a detailed music prompt for this scene, ensuring the music enhances the emotional impact:
+      systemMessage: `You are a master composer specializing in background music and underscoring for dramatic scenes.
+      Your expertise is creating instrumental music that enhances scenes without overpowering dialogue.
+      Consider the emotional tone and dramatic tension while ensuring the music remains in the background.
+      Any vocal elements should be minimal and atmospheric only (e.g., distant chants, wordless vocals, humming).
+      Focus on instrumental arrangements that support but don't compete with dialogue.`,
+      prompt: `Create a detailed music prompt for this dialogue scene, ensuring the music enhances the emotional impact while staying in the background:
       ${JSON.stringify(sceneIdea, null, 2)}`,
       temperature: 0.7,
     });
 
     const musicPrompt = `
-${promptData.genre} music that is ${promptData.mood}.
-Features ${promptData.instruments}.
-${promptData.tempo} tempo.
+Create ${promptData.genre} background music that is ${promptData.mood}.
+Instrumental arrangement featuring ${promptData.instruments}.
+${promptData.tempo} tempo with ${promptData.dynamics}.
 ${promptData.structure}`.trim();
 
     const musicUrl = await generateMusic({
@@ -72,4 +83,3 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     }
   })();
 }
-
