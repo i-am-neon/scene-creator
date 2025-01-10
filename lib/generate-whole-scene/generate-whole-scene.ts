@@ -10,9 +10,9 @@ import { updateJunctionTable } from "@/db/scene-character/update-junction-table"
 import { logger } from "../logger";
 import genSceneImage from "./gen-scene-image";
 import genScriptAudio from "../elevenlabs/gen-script-audio";
-import { addCharacterVoices } from "../elevenlabs/my-voices/add-character-voices-to-my-voices";
 import { deleteAllMyVoices } from "../elevenlabs/my-voices/delete-all-my-voices";
 import { generateSceneMusic } from "./gen-scene-music";
+import { addCharacterVoicesToMyVoices } from "../elevenlabs/my-voices/add-character-voices-to-my-voices";
 
 interface GenerateSceneParams {
   story: Story;
@@ -39,7 +39,10 @@ export default async function generateWholeScene({
 
   // Phase 1: Add voices and generate ideas in parallel
   const [, ideas] = await Promise.all([
-    addCharacterVoices(existingCharacters),
+    addCharacterVoicesToMyVoices({
+      characters: existingCharacters,
+      narratorVoiceId: story.narratorVoiceId,
+    }),
     generateIdeas({ story, existingCharacters, previousScenes }),
   ]);
 
@@ -126,3 +129,4 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     .then(console.log)
     .catch(console.error);
 }
+

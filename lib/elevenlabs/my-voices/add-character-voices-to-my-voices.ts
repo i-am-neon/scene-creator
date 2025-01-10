@@ -4,18 +4,57 @@ import { addVoiceToMyVoices } from "./add-voice-to-my-voices";
 import { voiceOptionsMap } from "../voice-options/voice-options";
 
 interface VoiceAdditionResult {
-  characterId: number;
+  id: number;
   originalVoiceId: string;
   newVoiceId: string;
   success: boolean;
   error?: string;
+  type: "character" | "narrator";
 }
 
-export async function addCharacterVoices(
-  characters: Character[]
-): Promise<VoiceAdditionResult[]> {
-  const results = await Promise.all(
-    characters.map(async (character): Promise<VoiceAdditionResult> => {
+interface AddVoicesParams {
+  characters: Character[];
+  narratorVoiceId: string;
+}
+
+export async function addCharacterVoicesToMyVoices({
+  characters,
+  narratorVoiceId,
+}: AddVoicesParams): Promise<VoiceAdditionResult[]> {
+  const allResults = await Promise.all([
+    // Add narrator voice
+    (async (): Promise<VoiceAdditionResult> => {
+      try {
+        const voice = voiceOptionsMap[narratorVoiceId];
+        const newVoiceId = await addVoiceToMyVoices({
+          publicUserId: voice.public_owner_id,
+          voiceId: narratorVoiceId,
+          newName: "Narrator",
+        });
+        return {
+          id: 0,
+          originalVoiceId: narratorVoiceId,
+          newVoiceId,
+          success: true,
+          type: "narrator",
+        };
+      } catch (error) {
+        await logger.error(`Failed to add narrator voice`, {
+          voiceId: narratorVoiceId,
+          error: error instanceof Error ? error.stack : String(error),
+        });
+        return {
+          id: 0,
+          originalVoiceId: narratorVoiceId,
+          newVoiceId: "",
+          success: false,
+          error: error instanceof Error ? error.message : String(error),
+          type: "narrator",
+        };
+      }
+    })(),
+    // Add character voices
+    ...characters.map(async (character): Promise<VoiceAdditionResult> => {
       try {
         const voice = voiceOptionsMap[character.voiceId];
         const newVoiceId = await addVoiceToMyVoices({
@@ -23,12 +62,12 @@ export async function addCharacterVoices(
           voiceId: character.voiceId,
           newName: character.displayName,
         });
-
         return {
-          characterId: character.id,
+          id: character.id,
           originalVoiceId: character.voiceId,
           newVoiceId,
           success: true,
+          type: "character",
         };
       } catch (error) {
         await logger.error(`Failed to add character voice`, {
@@ -36,26 +75,26 @@ export async function addCharacterVoices(
           voiceId: character.voiceId,
           error: error instanceof Error ? error.stack : String(error),
         });
-
         return {
-          characterId: character.id,
+          id: character.id,
           originalVoiceId: character.voiceId,
           newVoiceId: "",
           success: false,
           error: error instanceof Error ? error.message : String(error),
+          type: "character",
         };
       }
-    })
-  );
+    }),
+  ]);
 
-  const successCount = results.filter((r) => r.success).length;
-  await logger.info("Completed adding character voices", {
-    totalCharacters: characters.length,
+  const successCount = allResults.filter((r) => r.success).length;
+  await logger.info("Completed adding voices", {
+    totalVoices: allResults.length,
     successCount,
-    failureCount: characters.length - successCount,
+    failureCount: allResults.length - successCount,
   });
 
-  return results;
+  return allResults;
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
@@ -92,7 +131,10 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     ];
 
     try {
-      const results = await addCharacterVoices(testCharacters);
+      const results = await addCharacterVoicesToMyVoices({
+        characters: testCharacters,
+        narratorVoiceId: "21m00Tcm4TlvDq8ikWAM",
+      });
       console.log("Results:", JSON.stringify(results, null, 2));
     } catch (error) {
       console.error("Error:", error);
