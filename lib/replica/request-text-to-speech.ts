@@ -130,9 +130,9 @@ export async function requestTextToSpeech(
       }
 
       await logger.error("Text-to-speech generation failed permanently", {
-        error: error instanceof Error ? error.stack : String(error),
         attempts: attempt + 1,
         speakerId: options.speaker_id,
+        error: error instanceof Error ? error.stack : String(error),
         text: options.text,
       });
       throw error;
@@ -163,3 +163,4 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     }
   })();
 }
+

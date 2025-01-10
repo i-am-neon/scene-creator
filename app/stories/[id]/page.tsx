@@ -18,13 +18,15 @@ export default async function StoriesPage({
   return (
     <Suspense fallback={<div>Loading interactions...</div>}>
       <div className="flex flex-1 flex-col p-8 items-center">
-        <Image
-          alt=""
-          src={story.imageUrl}
-          width={192}
-          height={192}
-          className="mx-auto size-48 shrink-0 rounded-lg"
-        />
+        <div className="relative w-full max-w-2xl aspect-video rounded-lg overflow-hidden">
+          <Image
+            alt=""
+            src={story.imageUrl}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
+        </div>
         <h3 className="mt-6 text-sm font-medium text-gray-900">
           {story.title}
         </h3>
@@ -46,4 +48,3 @@ export default async function StoriesPage({
     </Suspense>
   );
 }
-

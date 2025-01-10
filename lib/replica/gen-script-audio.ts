@@ -41,15 +41,16 @@ export default async function genScriptAudio({
 
       // Find the selected style
       const selectedStyle = voice.styles.find((s) => s.id === styleId);
-      if (!selectedStyle) {
-        throw new Error(`Could not find style ${styleId} in voice ${voiceId}`);
+      if (!selectedStyle?.speakerId) {
+        throw new Error(
+          `Could not find speakerId for style ${styleId} in voice ${voiceId}`
+        );
       }
 
-      // Generate audio using text-to-speech
+      // Generate audio using text-to-speech with the style's speakerId
       const result = await requestTextToSpeech({
-        speaker_id: voiceId,
+        speaker_id: selectedStyle.speakerId, // Use the style's speakerId instead of the voice ID
         text: line.text,
-        voice_preset_id: styleId, // Use the selected style ID
         user_metadata: {
           session_id: uuidv4(),
         },
@@ -63,7 +64,7 @@ export default async function genScriptAudio({
         character: line.characterName,
         textLength: line.text.length,
         styleUsed: selectedStyle.name,
-        voiceId,
+        speakerIdUsed: selectedStyle.speakerId,
       });
     }
 

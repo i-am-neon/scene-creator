@@ -1,14 +1,18 @@
 "use server";
 
 import { Character } from "@/types/character";
-import elevenlabs from "../elevenlabs/init-eleven-labs";
+import elevenlabs from "../init-eleven-labs";
 
 export default async function getVoiceOptions({
   gender,
 }: {
   gender: Character["gender"];
 }) {
-  const { voices: allVoices } = await elevenlabs.voices.getAll();
+  const { voices: allVoices } = await elevenlabs.voices.getShared({
+    language: "en",
+    page_size: 100,
+    page: 1,
+  });
   let searchStrings: string[] = [];
   switch (gender) {
     case "male":
@@ -17,14 +21,12 @@ export default async function getVoiceOptions({
     case "female":
       searchStrings = ["female", "neutral"];
       break;
-    case "other":
-      searchStrings = ["male", "female", "neutral"];
-      break;
     default:
       searchStrings = ["male", "female", "neutral"];
   }
+  console.log("allVoices.length :>> ", allVoices.length);
   const filteredVoices = allVoices.filter((voice) => {
-    const voiceGender = voice?.labels?.gender;
+    const voiceGender = voice?.gender;
     if (!voiceGender) {
       return true;
     }
@@ -35,14 +37,16 @@ export default async function getVoiceOptions({
   return filteredVoices.map((voice) => ({
     id: voice.voice_id,
     name: voice.name,
-    labels: voice.labels,
+    gender: voice.gender,
+    accent: voice.accent,
+    age: voice.age,
     description: voice.description,
   }));
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   const voiceOptions = await getVoiceOptions({
-    gender: "other",
+    gender: "male",
   });
 
   console.log("voiceOptions.length :>> ", voiceOptions.length);
