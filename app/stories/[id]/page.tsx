@@ -27,7 +27,7 @@ export default async function StoriesPage({
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </div>
-        <h3 className="mt-6 text-sm font-medium text-gray-900">
+        <h3 className="mt-6 text-xl font-medium text-gray-900">
           {story.title}
         </h3>
         <dl className="mt-1 flex grow flex-col justify-between">
@@ -35,6 +35,7 @@ export default async function StoriesPage({
           <dd className="text-sm text-gray-500">{story.worldIdea}</dd>
           <dt className="sr-only">Role</dt>
         </dl>
+        <br />
         <CreateSceneButton storyId={story.id} />
         <br />
         <br />
