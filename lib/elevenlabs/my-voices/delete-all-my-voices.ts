@@ -6,7 +6,7 @@ import elevenlabs from "../init-eleven-labs";
 export async function deleteAllMyVoices(): Promise<void> {
   try {
     // Get all voices
-    const { voices } = await elevenlabs.voices.getShared();
+    const { voices } = await elevenlabs.voices.getAll();
 
     // Delete each voice
     const deletionPromises = voices.map(async (voice) => {

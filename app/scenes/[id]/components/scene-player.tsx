@@ -28,7 +28,7 @@ const positionToClassName: Record<keyof CharacterPositionMap, string> = {
 };
 
 const FADE_DURATION = 0; // seconds
-const MAX_MUSIC_VOLUME = 0.15;
+const MAX_MUSIC_VOLUME = 0.25;
 
 const ScenePlayer: React.FC<ScenePlayerProps> = ({ scene, characters }) => {
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
