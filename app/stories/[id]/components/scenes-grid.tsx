@@ -15,7 +15,7 @@ export default async function ScenesGrid({ storyId }: { storyId: number }) {
   return (
     <ul
       role="list"
-      className="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+      className="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3"
     >
       {scenes.map((scene) => (
         <Link href={`/scenes/${scene.id}`} key={scene.id}>
@@ -54,3 +54,4 @@ export default async function ScenesGrid({ storyId }: { storyId: number }) {
     </ul>
   );
 }
+

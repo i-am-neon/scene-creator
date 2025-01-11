@@ -39,12 +39,15 @@ export default async function StoriesPage({
         <br />
         <br />
         <h2 className="text-4xl">Characters</h2>
+        <br />
         <CharactersGrid storyId={story.id} />
         <br />
         <br />
         <h2 className="text-4xl">Scenes</h2>
+        <br />
         <ScenesGrid storyId={story.id} />
       </div>
     </Suspense>
   );
 }
+
