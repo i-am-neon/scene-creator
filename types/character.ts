@@ -13,7 +13,9 @@ const PhysicalDescriptionSchema = z.object({
   facialFeatures: z.string().describe("Shape of face, jaw, cheekbones, etc."),
   clothing: z
     .string()
-    .describe("Typical attire, including style, materials, and colors"),
+    .describe(
+      "What the character is wearing, including style, materials, and colors"
+    ),
   accessories: z
     .string()
     .describe(
