@@ -12,7 +12,7 @@ export default async function StoriesGrid() {
   return (
     <ul
       role="list"
-      className="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+      className="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 px-10"
     >
       {stories.map((story) => (
         <Link href={`/stories/${story.id}`} key={story.id}>
@@ -44,3 +44,4 @@ export default async function StoriesGrid() {
     </ul>
   );
 }
+
