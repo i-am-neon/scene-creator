@@ -1,5 +1,7 @@
 # Scene Creator
 
+![Alt text](demo.jpg)
+
 This is an LLM-powered web app that creates stories. It uses AI to create characters: complete with images and voice. It creates scripted scenes between the characters and creates images and music to go along with the scenes.
 
 It uses:
@@ -8,6 +10,8 @@ It uses:
 - [Flux hosted on Replicate](https://replicate.com/black-forest-labs/flux-1.1-pro-ultra) for image generation
 - [ElevenLabs](https://elevenlabs.io/) for voice generation
 - [Meta's musicgen](https://replicate.com/meta/musicgen) for music generation
+
+Check out the [demo on YouTube](https://youtu.be/BFdUyKYq_bY)
 
 ## Getting Started
 
